@@ -144,12 +144,49 @@ function cleanName(name: string): string {
 
 function cleanPhone(phone: string, region: string): string {
   if (!phone) return "";
-  // Remove all non-digit characters except +
-  let cleaned = phone.replace(/[^\d+]/g, "");
+  // Remove all non-digit characters
+  let digits = phone.replace(/\D/g, "");
   
-  // Add country code if missing
+  // Format phone number based on region
+  if (region === "singapore") {
+    // Singapore format: +65 XXXX XXXX
+    // Singapore local numbers are 8 digits starting with 8 or 9
+    
+    let localNumber = digits;
+    
+    // Handle various input formats:
+    // "6591234567" (10 digits with 65 prefix)
+    // "91234567" (8 digits local)
+    // "+6591234567" (already has + prefix, digits would be "6591234567")
+    
+    // If starts with 65 and has 10 digits, extract the local number
+    if (digits.startsWith("65") && digits.length === 10) {
+      localNumber = digits.slice(2); // Get the 8-digit local number
+    }
+    // If it's exactly 8 digits, use as-is
+    else if (digits.length === 8) {
+      localNumber = digits;
+    }
+    // If it's longer than 10 digits and starts with 65, try to extract
+    else if (digits.startsWith("65") && digits.length > 10) {
+      localNumber = digits.slice(2, 10); // Take 8 digits after 65
+    }
+    // Otherwise, take the last 8 digits if available
+    else if (digits.length > 8) {
+      localNumber = digits.slice(-8);
+    }
+    
+    // Format as +65 XXXX XXXX if we have 8 digits
+    if (localNumber.length === 8) {
+      return `+65 ${localNumber.slice(0, 4)} ${localNumber.slice(4)}`;
+    } else {
+      // If not 8 digits, return with +65 prefix but note it's malformed
+      return `+65 ${localNumber}`;
+    }
+  }
+  
+  // For other regions, add country code if missing
   const countryPrefixes: Record<string, string> = {
-    singapore: "+65",
     malaysia: "+60",
     indonesia: "+62",
     thailand: "+66",
@@ -162,39 +199,11 @@ function cleanPhone(phone: string, region: string): string {
     france: "+33"
   };
   
-  if (!cleaned.startsWith("+") && countryPrefixes[region]) {
-    // Check if it starts with country code without +
-    const prefix = countryPrefixes[region].slice(1);
-    if (!cleaned.startsWith(prefix)) {
-      cleaned = countryPrefixes[region] + cleaned;
-    } else {
-      cleaned = "+" + cleaned;
-    }
-  }
-  
-  // Format phone number based on region
-  if (region === "singapore") {
-    // Singapore format: +65 XXXX XXXX
-    // Extract the 8-digit local number
-    const digits = cleaned.replace(/\D/g, "");
-    let localNumber = digits;
-    
-    // Remove country code if present
-    if (digits.startsWith("65") && digits.length >= 10) {
-      localNumber = digits.slice(2);
-    }
-    
-    // Take only the last 8 digits for Singapore
-    if (localNumber.length > 8) {
-      localNumber = localNumber.slice(-8);
-    }
-    
-    // Format as +65 XXXX XXXX if we have 8 digits
-    if (localNumber.length === 8) {
-      cleaned = `+65 ${localNumber.slice(0, 4)} ${localNumber.slice(4)}`;
-    } else {
-      // If not 8 digits, just add +65 prefix
-      cleaned = `+65 ${localNumber}`;
+  let cleaned = "+" + digits;
+  if (countryPrefixes[region]) {
+    const prefix = countryPrefixes[region].slice(1); // Remove + from prefix
+    if (!digits.startsWith(prefix)) {
+      cleaned = countryPrefixes[region] + digits;
     }
   }
   
@@ -248,6 +257,39 @@ function validateEmail(email: string): { valid: boolean; message?: string } {
 
 function validatePhone(phone: string, region: string): { valid: boolean; message?: string } {
   if (!phone) return { valid: true };
+  
+  // Special validation for Singapore numbers
+  if (region === "singapore") {
+    // Remove all non-digits
+    const digits = phone.replace(/\D/g, "");
+    
+    // Extract the local number (8 digits)
+    let localNumber = digits;
+    if (digits.startsWith("65") && digits.length >= 10) {
+      localNumber = digits.slice(2);
+    }
+    
+    // Singapore mobile numbers must start with 8 or 9
+    // Landlines start with 6, but most logistics data is mobile
+    if (localNumber.length >= 1) {
+      const firstDigit = localNumber[0];
+      if (firstDigit !== "8" && firstDigit !== "9" && firstDigit !== "6") {
+        return { 
+          valid: false, 
+          message: `Invalid Singapore number: must start with 8, 9, or 6 after +65 prefix (got ${firstDigit})` 
+        };
+      }
+    }
+    
+    // Check length - should be 8 digits for local number
+    if (localNumber.length !== 8) {
+      return { 
+        valid: false, 
+        message: `Invalid Singapore number: local number should be 8 digits (got ${localNumber.length})` 
+      };
+    }
+  }
+  
   const config = REGION_CONFIGS[region] || REGION_CONFIGS.international;
   if (!config.phonePattern.test(phone.replace(/[\s-]/g, ""))) {
     return { valid: false, message: `Phone number doesn't match ${config.name} format (${config.phoneFormat})` };

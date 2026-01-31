@@ -196,6 +196,71 @@ describe("Data Cleaning Engine", () => {
       // Phone should be formatted as +65 XXXX XXXX
       expect(result.record.cleanedPhone).toBe("+65 9876 5432");
     });
+
+    it("formats 6592223333 as +65 9222 3333", () => {
+      const record = {
+        id: 18,
+        batchId: 1,
+        rowIndex: 17,
+        name: "Test User",
+        phone: "6592223333",
+        email: "test@example.com",
+        postalCode: "123456",
+        country: "Singapore",
+        status: "pending" as const,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const result = cleanRecord(record, "singapore");
+      
+      // Phone should be formatted as +65 XXXX XXXX
+      expect(result.record.cleanedPhone).toBe("+65 9222 3333");
+    });
+
+    it("flags invalid Singapore number starting with 1", () => {
+      const record = {
+        id: 19,
+        batchId: 1,
+        rowIndex: 18,
+        name: "Test User",
+        phone: "6512345678",
+        email: "test@example.com",
+        postalCode: "123456",
+        country: "Singapore",
+        status: "pending" as const,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const result = cleanRecord(record, "singapore");
+      
+      // Should have a phone validation issue
+      const phoneIssues = result.issues.filter(i => i.field === "phone");
+      expect(phoneIssues.length).toBeGreaterThan(0);
+      expect(phoneIssues.some(i => i.message?.includes("must start with 8, 9, or 6"))).toBe(true);
+    });
+
+    it("formats 6596667777 correctly as +65 9666 7777", () => {
+      const record = {
+        id: 20,
+        batchId: 1,
+        rowIndex: 19,
+        name: "Test User",
+        phone: "6596667777",
+        email: "test@example.com",
+        postalCode: "123456",
+        country: "Singapore",
+        status: "pending" as const,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const result = cleanRecord(record, "singapore");
+      
+      // Phone should be formatted as +65 XXXX XXXX
+      expect(result.record.cleanedPhone).toBe("+65 9666 7777");
+    });
   });
 
   describe("cleanRecord - Email Validation", () => {
