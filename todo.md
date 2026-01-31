@@ -83,3 +83,7 @@
 
 - [x] Merge address into single column (combine address line 1 and 2)
 - [x] Ensure raw address is completely struck through when corrected
+
+- [x] Create new Singapore test dataset with single address column and two perfect reference rows
+
+- [x] Fix LLM generating excessively long state field values exceeding database column limit

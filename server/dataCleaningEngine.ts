@@ -760,22 +760,27 @@ ${JSON.stringify(batch.map(r => ({
   country: r.country
 })), null, 2)}
 
-For each record, provide corrections in the following JSON format. Only include fields that need correction:
+For each record, provide corrections in the following JSON format. Only include fields that need correction.
+IMPORTANT: All field values must be SHORT and CONCISE - no explanations in field values!
+- state: Use only the state/province name (e.g., "California", "NSW"). For Singapore, use empty string "" since Singapore has no states.
+- city: Use only the city name (e.g., "Singapore", "Sydney")
+- All other fields: Use only the corrected value, no explanations
+
 {
   "corrections": [
     {
       "rowIndex": number,
-      "name": "corrected name if needed",
-      "phone": "corrected phone if needed",
-      "email": "corrected email if needed",
-      "addressLine1": "corrected address if needed",
-      "addressLine2": "corrected address2 if needed",
-      "city": "corrected city if needed",
-      "state": "corrected state if needed",
-      "postalCode": "corrected postal code if needed",
-      "country": "corrected country if needed",
+      "name": "corrected name",
+      "phone": "corrected phone in format +65 XXXX XXXX for Singapore",
+      "email": "corrected email",
+      "addressLine1": "corrected full address including unit number",
+      "addressLine2": "additional address line if any, otherwise empty",
+      "city": "city name only (e.g., Singapore)",
+      "state": "state/province name only, empty for Singapore",
+      "postalCode": "corrected postal code",
+      "country": "country name only (e.g., Singapore)",
       "confidence": "high" | "medium" | "low",
-      "notes": "explanation of corrections"
+      "notes": "explanation of corrections (this is the only field for explanations)"
     }
   ]
 }`;
@@ -833,15 +838,18 @@ For each record, provide corrections in the following JSON format. Only include 
           if (recordIndex !== -1 && correction.confidence !== "low") {
             const record = enhancedRecords[recordIndex];
             
-            if (correction.name) record.cleanedName = correction.name;
-            if (correction.phone) record.cleanedPhone = correction.phone;
-            if (correction.email) record.cleanedEmail = correction.email;
+            // Helper to truncate strings to max length
+            const truncate = (str: string | undefined, maxLen: number) => str ? str.substring(0, maxLen) : str;
+            
+            if (correction.name) record.cleanedName = truncate(correction.name, 255);
+            if (correction.phone) record.cleanedPhone = truncate(correction.phone, 64);
+            if (correction.email) record.cleanedEmail = truncate(correction.email, 320);
             if (correction.addressLine1) record.cleanedAddressLine1 = correction.addressLine1;
             if (correction.addressLine2) record.cleanedAddressLine2 = correction.addressLine2;
-            if (correction.city) record.cleanedCity = correction.city;
-            if (correction.state) record.cleanedState = correction.state;
-            if (correction.postalCode) record.cleanedPostalCode = correction.postalCode;
-            if (correction.country) record.cleanedCountry = correction.country;
+            if (correction.city) record.cleanedCity = truncate(correction.city, 128);
+            if (correction.state) record.cleanedState = truncate(correction.state, 128);
+            if (correction.postalCode) record.cleanedPostalCode = truncate(correction.postalCode, 32);
+            if (correction.country) record.cleanedCountry = truncate(correction.country, 128);
             
             // Update cleaned data object
             record.cleanedData = {
