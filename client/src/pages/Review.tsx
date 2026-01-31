@@ -199,11 +199,17 @@ export default function Review() {
       {selectedBatchId && (
         <>
           {/* Stats */}
-          <div className="grid gap-4 md:grid-cols-5">
+          <div className="grid gap-4 md:grid-cols-6">
             <Card>
               <CardContent className="pt-4">
                 <div className="text-2xl font-bold">{recordStats?.total || 0}</div>
                 <p className="text-xs text-muted-foreground">Total Records</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4">
+                <div className="text-2xl font-bold text-blue-600">{(recordStats as any)?.accepted || 0}</div>
+                <p className="text-xs text-muted-foreground">Accepted</p>
               </CardContent>
             </Card>
             <Card>
@@ -220,7 +226,7 @@ export default function Review() {
             </Card>
             <Card>
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-blue-600">{recordStats?.approved || 0}</div>
+                <div className="text-2xl font-bold text-emerald-600">{recordStats?.approved || 0}</div>
                 <p className="text-xs text-muted-foreground">Approved</p>
               </CardContent>
             </Card>
@@ -254,6 +260,7 @@ export default function Review() {
                     <SelectContent>
                       <SelectItem value="all">All Status</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="accepted">Accepted</SelectItem>
                       <SelectItem value="cleaned">Cleaned</SelectItem>
                       <SelectItem value="flagged">Flagged</SelectItem>
                       <SelectItem value="approved">Approved</SelectItem>
@@ -416,22 +423,24 @@ export default function Review() {
                               >
                                 <Edit className="h-4 w-4" />
                               </Button>
-                              {record.status !== "approved" && (
+                              {record.status !== "approved" && record.status !== "accepted" && (
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => approveMutation.mutate({ id: record.id })}
                                   disabled={approveMutation.isPending}
+                                  title="Approve"
                                 >
                                   <CheckCircle2 className="h-4 w-4 text-green-600" />
                                 </Button>
                               )}
-                              {record.status !== "rejected" && (
+                              {record.status !== "rejected" && record.status !== "accepted" && (
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => rejectMutation.mutate({ id: record.id })}
                                   disabled={rejectMutation.isPending}
+                                  title="Reject"
                                 >
                                   <XCircle className="h-4 w-4 text-red-600" />
                                 </Button>
@@ -614,18 +623,19 @@ export default function Review() {
 }
 
 function StatusBadge({ status }: { status: string }) {
-  const config: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; icon: any }> = {
+  const config: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; icon: any; className?: string }> = {
     pending: { variant: "secondary", icon: null },
     cleaned: { variant: "outline", icon: CheckCircle2 },
     flagged: { variant: "destructive", icon: AlertTriangle },
     approved: { variant: "default", icon: CheckCircle2 },
     rejected: { variant: "destructive", icon: XCircle },
+    accepted: { variant: "default", icon: CheckCircle2, className: "bg-blue-600 hover:bg-blue-700" },
   };
 
-  const { variant, icon: Icon } = config[status] || config.pending;
+  const { variant, icon: Icon, className } = config[status] || config.pending;
 
   return (
-    <Badge variant={variant} className="gap-1">
+    <Badge variant={variant} className={`gap-1 ${className || ''}`}>
       {Icon && <Icon className="h-3 w-3" />}
       {status}
     </Badge>

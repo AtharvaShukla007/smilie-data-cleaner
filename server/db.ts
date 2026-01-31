@@ -209,7 +209,7 @@ export async function getRecordsNeedingReview(batchId: number): Promise<DataReco
 
 export async function getBatchRecordStats(batchId: number) {
   const db = await getDb();
-  if (!db) return { total: 0, cleaned: 0, flagged: 0, approved: 0, rejected: 0, pending: 0 };
+  if (!db) return { total: 0, accepted: 0, cleaned: 0, flagged: 0, approved: 0, rejected: 0, pending: 0 };
   
   const stats = await db.select({
     status: dataRecords.status,
@@ -218,7 +218,7 @@ export async function getBatchRecordStats(batchId: number) {
     .where(eq(dataRecords.batchId, batchId))
     .groupBy(dataRecords.status);
   
-  const result = { total: 0, cleaned: 0, flagged: 0, approved: 0, rejected: 0, pending: 0 };
+  const result = { total: 0, accepted: 0, cleaned: 0, flagged: 0, approved: 0, rejected: 0, pending: 0 };
   stats.forEach(s => {
     result[s.status as keyof typeof result] = s.count;
     result.total += s.count;

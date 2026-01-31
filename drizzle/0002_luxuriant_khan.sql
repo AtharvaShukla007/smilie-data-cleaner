@@ -1,0 +1,1 @@
+ALTER TABLE `data_records` MODIFY COLUMN `status` enum('pending','cleaned','flagged','approved','rejected','accepted') NOT NULL DEFAULT 'pending';

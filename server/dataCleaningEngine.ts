@@ -691,8 +691,20 @@ export function cleanRecord(record: Partial<InsertDataRecord>, region: string = 
   qualityScore = Math.max(0, qualityScore);
   
   // Determine status
+  // Check if any cleaning was actually performed (original differs from cleaned)
   const hasErrors = issues.some(i => i.severity === "error");
-  const status = hasErrors ? "flagged" : "cleaned";
+  const hasChanges = 
+    (record.name || "") !== cleanedName ||
+    (record.phone || "") !== cleanedPhone ||
+    (record.email || "") !== cleanedEmail ||
+    (record.addressLine1 || "") !== cleanedAddressLine1 ||
+    (record.addressLine2 || "") !== cleanedAddressLine2 ||
+    (record.postalCode || "") !== cleanedPostalCode;
+  
+  // If no errors and no changes needed, mark as accepted
+  // If no errors but changes were made, mark as cleaned
+  // If errors exist, mark as flagged
+  const status = hasErrors ? "flagged" : (hasChanges ? "cleaned" : "accepted");
   
   return {
     record: {

@@ -74,7 +74,7 @@ export const dataRecords = mysqlTable("data_records", {
   cleanedPostalCode: varchar("cleanedPostalCode", { length: 32 }),
   cleanedCountry: varchar("cleanedCountry", { length: 128 }),
   // Status
-  status: mysqlEnum("status", ["pending", "cleaned", "flagged", "approved", "rejected"]).default("pending").notNull(),
+  status: mysqlEnum("status", ["pending", "cleaned", "flagged", "approved", "rejected", "accepted"]).default("pending").notNull(),
   qualityScore: int("qualityScore").default(100),
   needsReview: boolean("needsReview").default(false),
   reviewedBy: int("reviewedBy"),

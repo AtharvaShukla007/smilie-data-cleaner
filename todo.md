@@ -89,3 +89,6 @@
 - [x] Fix LLM generating excessively long state field values exceeding database column limit
 
 - [x] Fix address field mapping so single "address" column in CSV is properly stored and displayed
+
+- [x] Add "accepted" status for rows with no issues (no cleaning required)
+- [x] Hide approve/reject buttons for accepted rows
