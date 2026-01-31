@@ -92,3 +92,8 @@
 
 - [x] Add "accepted" status for rows with no issues (no cleaning required)
 - [x] Hide approve/reject buttons for accepted rows
+
+- [x] Fix data quality scoring - flagged records should not have 100% score
+- [x] Review and improve data quality scoring system
+- [x] Increase page size to 30 records
+- [x] Add pagination info (e.g., "Page X of Y") to the left of Previous button

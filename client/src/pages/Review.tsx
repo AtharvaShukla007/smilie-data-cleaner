@@ -46,7 +46,7 @@ export default function Review() {
   const [editingRecord, setEditingRecord] = useState<any | null>(null);
   const [viewingRecord, setViewingRecord] = useState<any | null>(null);
   const [page, setPage] = useState(0);
-  const pageSize = 20;
+  const pageSize = 30;
 
   const { data: batches } = trpc.batches.list.useQuery({ limit: 50 });
   const { data: records, isLoading: recordsLoading, refetch: refetchRecords } = trpc.records.list.useQuery(
@@ -461,25 +461,30 @@ export default function Review() {
             <p className="text-sm text-muted-foreground">
               Showing {page * pageSize + 1} to {Math.min((page + 1) * pageSize, recordStats?.total || 0)} of {recordStats?.total || 0} records
             </p>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(p => Math.max(0, p - 1))}
-                disabled={page === 0}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(p => p + 1)}
-                disabled={(page + 1) * pageSize >= (recordStats?.total || 0)}
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground">
+                Page {page + 1} of {Math.max(1, Math.ceil((recordStats?.total || 0) / pageSize))}
+              </span>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage(p => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage(p => p + 1)}
+                  disabled={(page + 1) * pageSize >= (recordStats?.total || 0)}
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </>

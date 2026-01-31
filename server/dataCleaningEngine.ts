@@ -687,12 +687,14 @@ export function cleanRecord(record: Partial<InsertDataRecord>, region: string = 
     });
   }
   
-  // Ensure score doesn't go below 0
-  qualityScore = Math.max(0, qualityScore);
-  
-  // Determine status
-  // Check if any cleaning was actually performed (original differs from cleaned)
+  // Calculate quality score based on issues
+  // Each error deducts more points, warnings deduct less
   const hasErrors = issues.some(i => i.severity === "error");
+  const hasWarnings = issues.some(i => i.severity === "warning");
+  const errorCount = issues.filter(i => i.severity === "error").length;
+  const warningCount = issues.filter(i => i.severity === "warning").length;
+  
+  // Check if any cleaning was actually performed (original differs from cleaned)
   const hasChanges = 
     (record.name || "") !== cleanedName ||
     (record.phone || "") !== cleanedPhone ||
@@ -700,6 +702,21 @@ export function cleanRecord(record: Partial<InsertDataRecord>, region: string = 
     (record.addressLine1 || "") !== cleanedAddressLine1 ||
     (record.addressLine2 || "") !== cleanedAddressLine2 ||
     (record.postalCode || "") !== cleanedPostalCode;
+  
+  // Ensure flagged records never have 100% quality score
+  // If there are errors, cap at 70%
+  // If there are warnings, cap at 90%
+  // If changes were made, cap at 95%
+  if (hasErrors) {
+    qualityScore = Math.min(qualityScore, 70 - (errorCount - 1) * 10);
+  } else if (hasWarnings) {
+    qualityScore = Math.min(qualityScore, 90 - (warningCount - 1) * 5);
+  } else if (hasChanges) {
+    qualityScore = Math.min(qualityScore, 95);
+  }
+  
+  // Ensure score stays within 0-100 range
+  qualityScore = Math.max(0, Math.min(100, qualityScore));
   
   // If no errors and no changes needed, mark as accepted
   // If no errors but changes were made, mark as cleaned
