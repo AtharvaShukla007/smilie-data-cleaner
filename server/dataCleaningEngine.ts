@@ -1,0 +1,698 @@
+import { invokeLLM } from "./_core/llm";
+import { InsertDataRecord, InsertValidationIssue } from "../drizzle/schema";
+
+// ============ REGION CONFIGURATIONS ============
+interface RegionConfig {
+  name: string;
+  postalCodePattern: RegExp;
+  postalCodeFormat: string;
+  phonePattern: RegExp;
+  phoneFormat: string;
+  states?: string[];
+  cities?: string[];
+}
+
+const REGION_CONFIGS: Record<string, RegionConfig> = {
+  singapore: {
+    name: "Singapore",
+    postalCodePattern: /^\d{6}$/,
+    postalCodeFormat: "6 digits (e.g., 123456)",
+    phonePattern: /^(\+65)?[689]\d{7}$/,
+    phoneFormat: "+65 XXXX XXXX",
+    states: [],
+    cities: ["Singapore"]
+  },
+  malaysia: {
+    name: "Malaysia",
+    postalCodePattern: /^\d{5}$/,
+    postalCodeFormat: "5 digits (e.g., 50000)",
+    phonePattern: /^(\+60)?[0-9]{9,10}$/,
+    phoneFormat: "+60 XX XXX XXXX"
+  },
+  indonesia: {
+    name: "Indonesia",
+    postalCodePattern: /^\d{5}$/,
+    postalCodeFormat: "5 digits (e.g., 12345)",
+    phonePattern: /^(\+62)?[0-9]{9,12}$/,
+    phoneFormat: "+62 XXX XXXX XXXX"
+  },
+  thailand: {
+    name: "Thailand",
+    postalCodePattern: /^\d{5}$/,
+    postalCodeFormat: "5 digits (e.g., 10110)",
+    phonePattern: /^(\+66)?[0-9]{9}$/,
+    phoneFormat: "+66 X XXXX XXXX"
+  },
+  vietnam: {
+    name: "Vietnam",
+    postalCodePattern: /^\d{6}$/,
+    postalCodeFormat: "6 digits (e.g., 100000)",
+    phonePattern: /^(\+84)?[0-9]{9,10}$/,
+    phoneFormat: "+84 XXX XXX XXXX"
+  },
+  philippines: {
+    name: "Philippines",
+    postalCodePattern: /^\d{4}$/,
+    postalCodeFormat: "4 digits (e.g., 1000)",
+    phonePattern: /^(\+63)?[0-9]{10}$/,
+    phoneFormat: "+63 XXX XXX XXXX"
+  },
+  australia: {
+    name: "Australia",
+    postalCodePattern: /^\d{4}$/,
+    postalCodeFormat: "4 digits (e.g., 2000)",
+    phonePattern: /^(\+61)?[0-9]{9}$/,
+    phoneFormat: "+61 X XXXX XXXX",
+    states: ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "ACT", "NT"]
+  },
+  usa: {
+    name: "United States",
+    postalCodePattern: /^\d{5}(-\d{4})?$/,
+    postalCodeFormat: "5 digits or ZIP+4 (e.g., 12345 or 12345-6789)",
+    phonePattern: /^(\+1)?[0-9]{10}$/,
+    phoneFormat: "+1 XXX XXX XXXX"
+  },
+  uk: {
+    name: "United Kingdom",
+    postalCodePattern: /^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i,
+    postalCodeFormat: "UK format (e.g., SW1A 1AA)",
+    phonePattern: /^(\+44)?[0-9]{10,11}$/,
+    phoneFormat: "+44 XXXX XXXXXX"
+  },
+  germany: {
+    name: "Germany",
+    postalCodePattern: /^\d{5}$/,
+    postalCodeFormat: "5 digits (e.g., 10115)",
+    phonePattern: /^(\+49)?[0-9]{10,11}$/,
+    phoneFormat: "+49 XXX XXXXXXX"
+  },
+  france: {
+    name: "France",
+    postalCodePattern: /^\d{5}$/,
+    postalCodeFormat: "5 digits (e.g., 75001)",
+    phonePattern: /^(\+33)?[0-9]{9}$/,
+    phoneFormat: "+33 X XX XX XX XX"
+  },
+  international: {
+    name: "International",
+    postalCodePattern: /^.{3,10}$/,
+    postalCodeFormat: "3-10 characters",
+    phonePattern: /^\+?[0-9]{7,15}$/,
+    phoneFormat: "International format with country code"
+  }
+};
+
+// ============ FIELD MAPPINGS ============
+const FIELD_MAPPINGS: Record<string, string[]> = {
+  name: ["name", "full_name", "fullname", "customer_name", "recipient", "recipient_name", "contact_name", "customer"],
+  phone: ["phone", "phone_number", "phonenumber", "mobile", "mobile_number", "contact", "tel", "telephone", "cell", "contact_number"],
+  email: ["email", "email_address", "emailaddress", "e-mail", "e_mail"],
+  addressLine1: ["address", "address1", "address_line_1", "addressline1", "street", "street_address", "address_1", "line1"],
+  addressLine2: ["address2", "address_line_2", "addressline2", "unit", "apt", "apartment", "suite", "floor", "address_2", "line2"],
+  city: ["city", "town", "suburb", "district", "area"],
+  state: ["state", "province", "region", "prefecture", "county"],
+  postalCode: ["postal_code", "postalcode", "postcode", "post_code", "zip", "zipcode", "zip_code", "pincode"],
+  country: ["country", "country_code", "nation"]
+};
+
+// ============ UTILITY FUNCTIONS ============
+function normalizeFieldName(field: string): string {
+  const normalized = field.toLowerCase().trim().replace(/[\s-]/g, "_");
+  for (const [standardField, aliases] of Object.entries(FIELD_MAPPINGS)) {
+    if (aliases.includes(normalized)) {
+      return standardField;
+    }
+  }
+  return normalized;
+}
+
+function cleanString(value: string | undefined | null): string {
+  if (!value) return "";
+  return value.toString().trim().replace(/\s+/g, " ");
+}
+
+function cleanName(name: string): string {
+  if (!name) return "";
+  // Remove extra spaces, capitalize properly
+  return name
+    .trim()
+    .replace(/\s+/g, " ")
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
+function cleanPhone(phone: string, region: string): string {
+  if (!phone) return "";
+  // Remove all non-digit characters except +
+  let cleaned = phone.replace(/[^\d+]/g, "");
+  
+  // Add country code if missing
+  const countryPrefixes: Record<string, string> = {
+    singapore: "+65",
+    malaysia: "+60",
+    indonesia: "+62",
+    thailand: "+66",
+    vietnam: "+84",
+    philippines: "+63",
+    australia: "+61",
+    usa: "+1",
+    uk: "+44",
+    germany: "+49",
+    france: "+33"
+  };
+  
+  if (!cleaned.startsWith("+") && countryPrefixes[region]) {
+    // Check if it starts with country code without +
+    const prefix = countryPrefixes[region].slice(1);
+    if (!cleaned.startsWith(prefix)) {
+      cleaned = countryPrefixes[region] + cleaned;
+    } else {
+      cleaned = "+" + cleaned;
+    }
+  }
+  
+  return cleaned;
+}
+
+function cleanEmail(email: string): string {
+  if (!email) return "";
+  return email.trim().toLowerCase();
+}
+
+function cleanPostalCode(postalCode: string, region: string): string {
+  if (!postalCode) return "";
+  let cleaned = postalCode.trim().toUpperCase();
+  
+  // Region-specific cleaning
+  if (region === "singapore") {
+    cleaned = cleaned.replace(/\D/g, "").slice(0, 6);
+  } else if (["malaysia", "indonesia", "thailand", "germany", "france"].includes(region)) {
+    cleaned = cleaned.replace(/\D/g, "").slice(0, 5);
+  } else if (["australia", "philippines"].includes(region)) {
+    cleaned = cleaned.replace(/\D/g, "").slice(0, 4);
+  } else if (region === "usa") {
+    cleaned = cleaned.replace(/[^\d-]/g, "");
+  } else if (region === "uk") {
+    // UK postcodes need special handling
+    cleaned = cleaned.replace(/[^A-Z0-9\s]/gi, "");
+  }
+  
+  return cleaned;
+}
+
+function cleanAddress(address: string): string {
+  if (!address) return "";
+  return address
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/,+/g, ",")
+    .replace(/\s*,\s*/g, ", ");
+}
+
+// ============ VALIDATION FUNCTIONS ============
+function validateEmail(email: string): { valid: boolean; message?: string } {
+  if (!email) return { valid: true }; // Empty is OK, will be flagged separately if required
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return { valid: false, message: "Invalid email format" };
+  }
+  return { valid: true };
+}
+
+function validatePhone(phone: string, region: string): { valid: boolean; message?: string } {
+  if (!phone) return { valid: true };
+  const config = REGION_CONFIGS[region] || REGION_CONFIGS.international;
+  if (!config.phonePattern.test(phone.replace(/[\s-]/g, ""))) {
+    return { valid: false, message: `Phone number doesn't match ${config.name} format (${config.phoneFormat})` };
+  }
+  return { valid: true };
+}
+
+function validatePostalCode(postalCode: string, region: string): { valid: boolean; message?: string } {
+  if (!postalCode) return { valid: true };
+  const config = REGION_CONFIGS[region] || REGION_CONFIGS.international;
+  if (!config.postalCodePattern.test(postalCode)) {
+    return { valid: false, message: `Postal code doesn't match ${config.name} format (${config.postalCodeFormat})` };
+  }
+  return { valid: true };
+}
+
+function validateName(name: string): { valid: boolean; message?: string } {
+  if (!name) return { valid: true };
+  if (name.length < 2) {
+    return { valid: false, message: "Name is too short" };
+  }
+  if (/^\d+$/.test(name)) {
+    return { valid: false, message: "Name contains only numbers" };
+  }
+  return { valid: true };
+}
+
+function validateAddress(address: string): { valid: boolean; message?: string } {
+  if (!address) return { valid: true };
+  if (address.length < 5) {
+    return { valid: false, message: "Address is too short" };
+  }
+  return { valid: true };
+}
+
+// ============ MAIN CLEANING FUNCTIONS ============
+export interface CleaningResult {
+  record: Partial<InsertDataRecord>;
+  issues: InsertValidationIssue[];
+  qualityScore: number;
+  needsReview: boolean;
+}
+
+export function mapRawDataToRecord(rawData: Record<string, string>, rowIndex: number, batchId: number): Partial<InsertDataRecord> {
+  const record: Partial<InsertDataRecord> = {
+    batchId,
+    rowIndex,
+    originalData: rawData,
+    status: "pending"
+  };
+  
+  // Map fields from raw data
+  for (const [key, value] of Object.entries(rawData)) {
+    const normalizedKey = normalizeFieldName(key);
+    const cleanedValue = cleanString(value);
+    
+    switch (normalizedKey) {
+      case "name":
+        record.name = cleanedValue;
+        break;
+      case "phone":
+        record.phone = cleanedValue;
+        break;
+      case "email":
+        record.email = cleanedValue;
+        break;
+      case "addressLine1":
+        record.addressLine1 = cleanedValue;
+        break;
+      case "addressLine2":
+        record.addressLine2 = cleanedValue;
+        break;
+      case "city":
+        record.city = cleanedValue;
+        break;
+      case "state":
+        record.state = cleanedValue;
+        break;
+      case "postalCode":
+        record.postalCode = cleanedValue;
+        break;
+      case "country":
+        record.country = cleanedValue;
+        break;
+    }
+  }
+  
+  return record;
+}
+
+export function cleanRecord(record: Partial<InsertDataRecord>, region: string = "singapore"): CleaningResult {
+  const issues: InsertValidationIssue[] = [];
+  let qualityScore = 100;
+  let needsReview = false;
+  
+  const batchId = record.batchId!;
+  const recordId = record.id || 0; // Will be updated after insert
+  
+  // Clean each field
+  const cleanedName = cleanName(record.name || "");
+  const cleanedPhone = cleanPhone(record.phone || "", region);
+  const cleanedEmail = cleanEmail(record.email || "");
+  const cleanedAddressLine1 = cleanAddress(record.addressLine1 || "");
+  const cleanedAddressLine2 = cleanAddress(record.addressLine2 || "");
+  const cleanedCity = cleanString(record.city || "");
+  const cleanedState = cleanString(record.state || "");
+  const cleanedPostalCode = cleanPostalCode(record.postalCode || "", region);
+  const cleanedCountry = cleanString(record.country || "") || REGION_CONFIGS[region]?.name || "";
+  
+  // Validate and create issues
+  
+  // Name validation
+  if (!cleanedName) {
+    issues.push({
+      recordId,
+      batchId,
+      field: "name",
+      severity: "error",
+      issueType: "missing_required",
+      message: "Name is missing",
+      originalValue: record.name || null
+    });
+    qualityScore -= 20;
+    needsReview = true;
+  } else {
+    const nameValidation = validateName(cleanedName);
+    if (!nameValidation.valid) {
+      issues.push({
+        recordId,
+        batchId,
+        field: "name",
+        severity: "warning",
+        issueType: "invalid_format",
+        message: nameValidation.message!,
+        originalValue: record.name || null,
+        suggestedValue: cleanedName
+      });
+      qualityScore -= 10;
+    }
+  }
+  
+  // Phone validation
+  if (!cleanedPhone) {
+    issues.push({
+      recordId,
+      batchId,
+      field: "phone",
+      severity: "error",
+      issueType: "missing_required",
+      message: "Phone number is missing",
+      originalValue: record.phone || null
+    });
+    qualityScore -= 20;
+    needsReview = true;
+  } else {
+    const phoneValidation = validatePhone(cleanedPhone, region);
+    if (!phoneValidation.valid) {
+      issues.push({
+        recordId,
+        batchId,
+        field: "phone",
+        severity: "warning",
+        issueType: "invalid_format",
+        message: phoneValidation.message!,
+        originalValue: record.phone || null,
+        suggestedValue: cleanedPhone
+      });
+      qualityScore -= 10;
+      needsReview = true;
+    }
+  }
+  
+  // Email validation
+  if (cleanedEmail) {
+    const emailValidation = validateEmail(cleanedEmail);
+    if (!emailValidation.valid) {
+      issues.push({
+        recordId,
+        batchId,
+        field: "email",
+        severity: "warning",
+        issueType: "invalid_format",
+        message: emailValidation.message!,
+        originalValue: record.email || null,
+        suggestedValue: cleanedEmail
+      });
+      qualityScore -= 5;
+    }
+  }
+  
+  // Address validation
+  if (!cleanedAddressLine1) {
+    issues.push({
+      recordId,
+      batchId,
+      field: "addressLine1",
+      severity: "error",
+      issueType: "missing_required",
+      message: "Address is missing",
+      originalValue: record.addressLine1 || null
+    });
+    qualityScore -= 20;
+    needsReview = true;
+  } else {
+    const addressValidation = validateAddress(cleanedAddressLine1);
+    if (!addressValidation.valid) {
+      issues.push({
+        recordId,
+        batchId,
+        field: "addressLine1",
+        severity: "warning",
+        issueType: "invalid_format",
+        message: addressValidation.message!,
+        originalValue: record.addressLine1 || null,
+        suggestedValue: cleanedAddressLine1
+      });
+      qualityScore -= 10;
+      needsReview = true;
+    }
+  }
+  
+  // Postal code validation
+  if (!cleanedPostalCode) {
+    issues.push({
+      recordId,
+      batchId,
+      field: "postalCode",
+      severity: "error",
+      issueType: "missing_required",
+      message: "Postal code is missing",
+      originalValue: record.postalCode || null
+    });
+    qualityScore -= 15;
+    needsReview = true;
+  } else {
+    const postalValidation = validatePostalCode(cleanedPostalCode, region);
+    if (!postalValidation.valid) {
+      issues.push({
+        recordId,
+        batchId,
+        field: "postalCode",
+        severity: "warning",
+        issueType: "invalid_format",
+        message: postalValidation.message!,
+        originalValue: record.postalCode || null,
+        suggestedValue: cleanedPostalCode
+      });
+      qualityScore -= 10;
+      needsReview = true;
+    }
+  }
+  
+  // Check for data that changed significantly
+  if (record.name && cleanedName && record.name.toLowerCase() !== cleanedName.toLowerCase()) {
+    issues.push({
+      recordId,
+      batchId,
+      field: "name",
+      severity: "info",
+      issueType: "auto_corrected",
+      message: "Name was standardized",
+      originalValue: record.name,
+      suggestedValue: cleanedName
+    });
+  }
+  
+  if (record.phone && cleanedPhone && record.phone !== cleanedPhone) {
+    issues.push({
+      recordId,
+      batchId,
+      field: "phone",
+      severity: "info",
+      issueType: "auto_corrected",
+      message: "Phone number was formatted",
+      originalValue: record.phone,
+      suggestedValue: cleanedPhone
+    });
+  }
+  
+  // Ensure score doesn't go below 0
+  qualityScore = Math.max(0, qualityScore);
+  
+  // Determine status
+  const hasErrors = issues.some(i => i.severity === "error");
+  const status = hasErrors ? "flagged" : "cleaned";
+  
+  return {
+    record: {
+      ...record,
+      cleanedName,
+      cleanedPhone,
+      cleanedEmail,
+      cleanedAddressLine1,
+      cleanedAddressLine2,
+      cleanedCity,
+      cleanedState,
+      cleanedPostalCode,
+      cleanedCountry,
+      cleanedData: {
+        name: cleanedName,
+        phone: cleanedPhone,
+        email: cleanedEmail,
+        addressLine1: cleanedAddressLine1,
+        addressLine2: cleanedAddressLine2,
+        city: cleanedCity,
+        state: cleanedState,
+        postalCode: cleanedPostalCode,
+        country: cleanedCountry
+      },
+      status,
+      qualityScore,
+      needsReview
+    },
+    issues,
+    qualityScore,
+    needsReview
+  };
+}
+
+// ============ LLM-POWERED ENHANCEMENT ============
+export async function enhanceWithLLM(records: Partial<InsertDataRecord>[], region: string): Promise<Partial<InsertDataRecord>[]> {
+  if (records.length === 0) return [];
+  
+  // Only process records that need review or have issues
+  const recordsToEnhance = records.filter(r => r.needsReview || (r.qualityScore && r.qualityScore < 80));
+  
+  if (recordsToEnhance.length === 0) return records;
+  
+  // Process in batches of 10 for LLM
+  const batchSize = 10;
+  const enhancedRecords: Partial<InsertDataRecord>[] = [...records];
+  
+  for (let i = 0; i < recordsToEnhance.length; i += batchSize) {
+    const batch = recordsToEnhance.slice(i, i + batchSize);
+    
+    try {
+      const prompt = `You are a data cleaning expert specializing in ${REGION_CONFIGS[region]?.name || "international"} addresses.
+
+Analyze and correct the following address records. For each record, provide corrections for any issues found.
+
+Records to analyze:
+${JSON.stringify(batch.map(r => ({
+  rowIndex: r.rowIndex,
+  name: r.name,
+  phone: r.phone,
+  email: r.email,
+  address: r.addressLine1,
+  address2: r.addressLine2,
+  city: r.city,
+  state: r.state,
+  postalCode: r.postalCode,
+  country: r.country
+})), null, 2)}
+
+For each record, provide corrections in the following JSON format. Only include fields that need correction:
+{
+  "corrections": [
+    {
+      "rowIndex": number,
+      "name": "corrected name if needed",
+      "phone": "corrected phone if needed",
+      "email": "corrected email if needed",
+      "addressLine1": "corrected address if needed",
+      "addressLine2": "corrected address2 if needed",
+      "city": "corrected city if needed",
+      "state": "corrected state if needed",
+      "postalCode": "corrected postal code if needed",
+      "country": "corrected country if needed",
+      "confidence": "high" | "medium" | "low",
+      "notes": "explanation of corrections"
+    }
+  ]
+}`;
+
+      const response = await invokeLLM({
+        messages: [
+          { role: "system", content: "You are a data cleaning expert. Respond only with valid JSON." },
+          { role: "user", content: prompt }
+        ],
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "address_corrections",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                corrections: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      rowIndex: { type: "integer" },
+                      name: { type: "string" },
+                      phone: { type: "string" },
+                      email: { type: "string" },
+                      addressLine1: { type: "string" },
+                      addressLine2: { type: "string" },
+                      city: { type: "string" },
+                      state: { type: "string" },
+                      postalCode: { type: "string" },
+                      country: { type: "string" },
+                      confidence: { type: "string", enum: ["high", "medium", "low"] },
+                      notes: { type: "string" }
+                    },
+                    required: ["rowIndex", "confidence", "notes"],
+                    additionalProperties: false
+                  }
+                }
+              },
+              required: ["corrections"],
+              additionalProperties: false
+            }
+          }
+        }
+      });
+
+      const content = response.choices[0]?.message?.content;
+      if (content && typeof content === 'string') {
+        const parsed = JSON.parse(content);
+        
+        // Apply corrections
+        for (const correction of parsed.corrections) {
+          const recordIndex = enhancedRecords.findIndex(r => r.rowIndex === correction.rowIndex);
+          if (recordIndex !== -1 && correction.confidence !== "low") {
+            const record = enhancedRecords[recordIndex];
+            
+            if (correction.name) record.cleanedName = correction.name;
+            if (correction.phone) record.cleanedPhone = correction.phone;
+            if (correction.email) record.cleanedEmail = correction.email;
+            if (correction.addressLine1) record.cleanedAddressLine1 = correction.addressLine1;
+            if (correction.addressLine2) record.cleanedAddressLine2 = correction.addressLine2;
+            if (correction.city) record.cleanedCity = correction.city;
+            if (correction.state) record.cleanedState = correction.state;
+            if (correction.postalCode) record.cleanedPostalCode = correction.postalCode;
+            if (correction.country) record.cleanedCountry = correction.country;
+            
+            // Update cleaned data object
+            record.cleanedData = {
+              name: record.cleanedName || "",
+              phone: record.cleanedPhone || "",
+              email: record.cleanedEmail || "",
+              addressLine1: record.cleanedAddressLine1 || "",
+              addressLine2: record.cleanedAddressLine2 || "",
+              city: record.cleanedCity || "",
+              state: record.cleanedState || "",
+              postalCode: record.cleanedPostalCode || "",
+              country: record.cleanedCountry || ""
+            };
+            
+            // Improve quality score for high confidence corrections
+            if (correction.confidence === "high" && record.qualityScore) {
+              record.qualityScore = Math.min(100, record.qualityScore + 15);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("LLM enhancement failed for batch:", error);
+      // Continue with other batches even if one fails
+    }
+  }
+  
+  return enhancedRecords;
+}
+
+// ============ EXPORT FUNCTIONS ============
+export function getRegionConfigs() {
+  return REGION_CONFIGS;
+}
+
+export function getSupportedRegions(): string[] {
+  return Object.keys(REGION_CONFIGS);
+}
