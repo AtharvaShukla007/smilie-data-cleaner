@@ -236,13 +236,129 @@ function cleanPostalCode(postalCode: string, region: string): string {
   return cleaned;
 }
 
-function cleanAddress(address: string): string {
+function cleanAddress(address: string, region: string = "singapore"): string {
   if (!address) return "";
-  return address
+  
+  let cleaned = address
     .trim()
     .replace(/\s+/g, " ")
     .replace(/,+/g, ",")
     .replace(/\s*,\s*/g, ", ");
+  
+  // Singapore-specific address standardization
+  if (region === "singapore") {
+    // Standardize common abbreviations
+    const abbreviations: [RegExp, string][] = [
+      // Block variations
+      [/\bblk\b/gi, "Block"],
+      [/\bBLK\b/g, "Block"],
+      [/\bblock\b/gi, "Block"],
+      
+      // Street variations
+      [/\bst\b/gi, "Street"],
+      [/\bstr\b/gi, "Street"],
+      
+      // Road variations
+      [/\brd\b/gi, "Road"],
+      
+      // Avenue variations
+      [/\bave\b/gi, "Avenue"],
+      [/\bav\b/gi, "Avenue"],
+      
+      // Drive variations
+      [/\bdr\b/gi, "Drive"],
+      
+      // Lane variations
+      [/\bln\b/gi, "Lane"],
+      
+      // Place variations
+      [/\bpl\b/gi, "Place"],
+      
+      // Crescent variations
+      [/\bcres\b/gi, "Crescent"],
+      [/\bcr\b/gi, "Crescent"],
+      
+      // Terrace variations
+      [/\bter\b/gi, "Terrace"],
+      [/\bterr\b/gi, "Terrace"],
+      
+      // Close variations
+      [/\bcl\b/gi, "Close"],
+      
+      // Walk variations
+      [/\bwk\b/gi, "Walk"],
+      
+      // Garden/Gardens variations
+      [/\bgdn\b/gi, "Garden"],
+      [/\bgdns\b/gi, "Gardens"],
+      
+      // North/South/East/West variations
+      [/\bnth\b/gi, "North"],
+      [/\bsth\b/gi, "South"],
+      [/\best\b/gi, "East"],
+      [/\bwst\b/gi, "West"],
+      [/\bn\b/gi, "North"],
+      [/\bs\b(?!\d)/gi, "South"], // Avoid matching S followed by numbers
+      [/\be\b/gi, "East"],
+      [/\bw\b/gi, "West"],
+      
+      // Common Singapore location abbreviations
+      [/\bAMK\b/gi, "Ang Mo Kio"],
+      [/\bTPY\b/gi, "Toa Payoh"],
+      [/\bCCK\b/gi, "Choa Chu Kang"],
+      [/\bJE\b/gi, "Jurong East"],
+      [/\bJW\b/gi, "Jurong West"],
+      [/\bYCK\b/gi, "Yio Chu Kang"],
+      [/\bBTK\b/gi, "Bukit Timah"],
+      [/\bBBT\b/gi, "Bukit Batok"],
+      [/\bBPJ\b/gi, "Bukit Panjang"],
+      [/\bSGN\b/gi, "Serangoon"],
+      [/\bSMB\b/gi, "Sembawang"],
+      [/\bWDL\b/gi, "Woodlands"],
+      [/\bPGR\b/gi, "Pasir Ris"],
+      [/\bTPN\b/gi, "Tampines"],
+      [/\bBDK\b/gi, "Bedok"],
+      [/\bMRB\b/gi, "Marine Parade"],
+      [/\bKLG\b/gi, "Kallang"],
+      [/\bGYL\b/gi, "Geylang"],
+      [/\bQTN\b/gi, "Queenstown"],
+      [/\bCBD\b/gi, "Central Business District"],
+      
+      // Floor/Unit standardization
+      [/\b#(\d+)-(\d+)\b/g, "#$1-$2"], // Keep unit format as-is
+      [/\bunit\s*(\d+)/gi, "Unit $1"],
+      [/\bflr\b/gi, "Floor"],
+      [/\bfl\b/gi, "Floor"],
+      [/\blvl\b/gi, "Level"],
+    ];
+    
+    for (const [pattern, replacement] of abbreviations) {
+      cleaned = cleaned.replace(pattern, replacement);
+    }
+    
+    // Ensure proper capitalization for Singapore addresses
+    // Split by common delimiters and capitalize each part
+    cleaned = cleaned
+      .split(/([,#\-])/)
+      .map(part => {
+        if (/^[,#\-]$/.test(part)) return part;
+        return part
+          .split(' ')
+          .map(word => {
+            // Keep numbers and unit formats as-is
+            if (/^\d+$/.test(word) || /^#\d+/.test(word)) return word;
+            // Capitalize first letter of each word
+            if (word.length > 0) {
+              return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            }
+            return word;
+          })
+          .join(' ');
+      })
+      .join('');
+  }
+  
+  return cleaned;
 }
 
 // ============ VALIDATION FUNCTIONS ============
@@ -392,8 +508,8 @@ export function cleanRecord(record: Partial<InsertDataRecord>, region: string = 
   const cleanedName = cleanName(record.name || "");
   const cleanedPhone = cleanPhone(record.phone || "", region);
   const cleanedEmail = cleanEmail(record.email || "");
-  const cleanedAddressLine1 = cleanAddress(record.addressLine1 || "");
-  const cleanedAddressLine2 = cleanAddress(record.addressLine2 || "");
+  const cleanedAddressLine1 = cleanAddress(record.addressLine1 || "", region);
+  const cleanedAddressLine2 = cleanAddress(record.addressLine2 || "", region);
   const cleanedCity = cleanString(record.city || "");
   const cleanedState = cleanString(record.state || "");
   const cleanedPostalCode = cleanPostalCode(record.postalCode || "", region);

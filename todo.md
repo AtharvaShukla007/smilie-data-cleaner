@@ -74,3 +74,7 @@
 - [x] Fix Singapore phone formatting for numbers like "6592223333" → "+65 9222 3333"
 - [x] Validate Singapore numbers must start with 8 or 9 after +65 prefix
 - [x] Flag invalid Singapore numbers like "6512345678" (starts with 1, not 8 or 9)
+
+- [x] Verify and enhance address ingestion and cleaning in data pipeline
+- [x] Create improved Singapore test dataset with realistic addresses
+- [x] Fix stats not updating when rejecting records on Review & Clean page

@@ -58,7 +58,7 @@ export default function Review() {
     },
     { enabled: !!selectedBatchId }
   );
-  const { data: recordStats } = trpc.records.stats.useQuery(
+  const { data: recordStats, refetch: refetchStats } = trpc.records.stats.useQuery(
     { batchId: selectedBatchId! },
     { enabled: !!selectedBatchId }
   );
@@ -71,6 +71,7 @@ export default function Review() {
     onSuccess: () => {
       toast.success("Record approved");
       refetchRecords();
+      refetchStats();
     }
   });
 
@@ -78,6 +79,7 @@ export default function Review() {
     onSuccess: () => {
       toast.success("Record rejected");
       refetchRecords();
+      refetchStats();
     }
   });
 
@@ -86,6 +88,7 @@ export default function Review() {
       toast.success(`Approved ${data.count} records`);
       setSelectedRecords([]);
       refetchRecords();
+      refetchStats();
     }
   });
 
@@ -94,6 +97,7 @@ export default function Review() {
       toast.success(`Rejected ${data.count} records`);
       setSelectedRecords([]);
       refetchRecords();
+      refetchStats();
     }
   });
 
@@ -106,6 +110,7 @@ export default function Review() {
       }
       setSelectedRecords([]);
       refetchRecords();
+      refetchStats();
     }
   });
 
@@ -114,6 +119,7 @@ export default function Review() {
       toast.success("Record updated");
       setEditingRecord(null);
       refetchRecords();
+      refetchStats();
     }
   });
 
