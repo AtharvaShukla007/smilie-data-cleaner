@@ -87,3 +87,5 @@
 - [x] Create new Singapore test dataset with single address column and two perfect reference rows
 
 - [x] Fix LLM generating excessively long state field values exceeding database column limit
+
+- [x] Fix address field mapping so single "address" column in CSV is properly stored and displayed

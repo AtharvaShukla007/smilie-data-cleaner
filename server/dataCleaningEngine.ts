@@ -472,9 +472,11 @@ export function mapRawDataToRecord(rawData: Record<string, string>, rowIndex: nu
       case "email":
         record.email = cleanedValue;
         break;
+      case "address":
       case "addressLine1":
         record.addressLine1 = cleanedValue;
         break;
+      case "address2":
       case "addressLine2":
         record.addressLine2 = cleanedValue;
         break;
