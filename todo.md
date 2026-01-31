@@ -101,3 +101,6 @@
 - [x] Fix phone validation - numbers like +65 1234 5678 should be flagged (starts with 1, not 6/8/9)
 - [x] Preserve N/A values - don't clean or modify N/A entries
 - [x] Create v4 dataset with corrected test cases and real addresses for N/A records
+
+- [x] Optimize data upload and processing speed
+- [x] Create comprehensive walkthrough presentation script

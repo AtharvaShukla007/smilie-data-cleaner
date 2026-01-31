@@ -9,7 +9,7 @@ import { nanoid } from "nanoid";
 import { notifyOwner } from "./_core/notification";
 import {
   createUploadBatch, getUploadBatch, getUserBatches, updateUploadBatch, getBatchStats,
-  createDataRecords, getDataRecord, getBatchRecords, updateDataRecord, updateDataRecordsBulk,
+  createDataRecords, getDataRecord, getBatchRecords, updateDataRecord, updateDataRecordsBulk, updateDataRecordsBatch,
   getRecordsNeedingReview, getBatchRecordStats,
   createValidationIssues, getRecordIssues, getBatchIssues, resolveValidationIssue, getBatchIssueStats,
   createAuditLog, getAuditLogs,
@@ -189,9 +189,10 @@ export const appRouter = router({
         let warningCount = 0;
         let cleanedCount = 0;
         
+        // Process all records in memory first (fast)
         for (const record of records) {
           const result = cleanRecord(record, batch.region || "singapore");
-          cleanedRecords.push(result.record);
+          cleanedRecords.push({ ...result.record, id: record.id });
           
           // Update issues with actual record ID
           const issuesWithId = result.issues.map(issue => ({
@@ -207,16 +208,16 @@ export const appRouter = router({
           } else {
             cleanedCount++;
           }
-          
-          // Update record
-          await updateDataRecord(record.id, result.record);
-          
-          // Update job progress
-          await updateProcessingJob(jobId, {
-            processedItems: cleanedRecords.length,
-            progress: Math.round((cleanedRecords.length / records.length) * 100)
-          });
         }
+        
+        // Batch update all records at once using optimized function
+        await updateDataRecordsBatch(cleanedRecords.map(r => ({ id: r.id!, ...r })));
+        
+        // Update job progress to 100%
+        await updateProcessingJob(jobId, {
+          processedItems: cleanedRecords.length,
+          progress: 100
+        });
         
         // LLM enhancement if requested
         if (input.useLLM) {

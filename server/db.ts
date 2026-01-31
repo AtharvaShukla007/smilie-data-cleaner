@@ -196,6 +196,22 @@ export async function updateDataRecordsBulk(ids: number[], updates: Partial<Inse
   await db.update(dataRecords).set(updates).where(inArray(dataRecords.id, ids));
 }
 
+// Efficient batch update for multiple records with different values
+export async function updateDataRecordsBatch(records: Array<{ id: number } & Partial<InsertDataRecord>>): Promise<void> {
+  const db = await getDb();
+  if (!db || records.length === 0) return;
+  
+  // Process in batches of 50 with parallel execution
+  const BATCH_SIZE = 50;
+  for (let i = 0; i < records.length; i += BATCH_SIZE) {
+    const batch = records.slice(i, i + BATCH_SIZE);
+    await Promise.all(batch.map(r => {
+      const { id, ...updates } = r;
+      return db.update(dataRecords).set(updates).where(eq(dataRecords.id, id));
+    }));
+  }
+}
+
 export async function getRecordsNeedingReview(batchId: number): Promise<DataRecord[]> {
   const db = await getDb();
   if (!db) return [];
