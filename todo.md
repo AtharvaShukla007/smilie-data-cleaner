@@ -78,3 +78,5 @@
 - [x] Verify and enhance address ingestion and cleaning in data pipeline
 - [x] Create improved Singapore test dataset with realistic addresses
 - [x] Fix stats not updating when rejecting records on Review & Clean page
+
+- [x] Display address fields (raw and cleaned) in Review & Clean table

@@ -332,6 +332,7 @@ export default function Review() {
                         </TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Phone</TableHead>
+                        <TableHead>Address</TableHead>
                         <TableHead>Postal Code</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Quality</TableHead>
@@ -360,6 +361,23 @@ export default function Review() {
                               <p>{record.cleanedPhone || record.phone || "-"}</p>
                               {record.phone !== record.cleanedPhone && record.phone && (
                                 <p className="text-xs text-muted-foreground line-through">{record.phone}</p>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="max-w-[250px]">
+                              <p className="truncate" title={record.cleanedAddressLine1 || record.addressLine1 || "-"}>
+                                {record.cleanedAddressLine1 || record.addressLine1 || "-"}
+                              </p>
+                              {record.addressLine1 !== record.cleanedAddressLine1 && record.addressLine1 && (
+                                <p className="text-xs text-muted-foreground line-through truncate" title={record.addressLine1}>
+                                  {record.addressLine1}
+                                </p>
+                              )}
+                              {(record.cleanedAddressLine2 || record.addressLine2) && (
+                                <p className="text-xs text-muted-foreground truncate" title={record.cleanedAddressLine2 || record.addressLine2 || ""}>
+                                  {record.cleanedAddressLine2 || record.addressLine2}
+                                </p>
                               )}
                             </div>
                           </TableCell>
