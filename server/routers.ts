@@ -462,6 +462,45 @@ export const appRouter = router({
         
         return { success: true, count: input.ids.length };
       }),
+    
+    acceptAllCleaned: protectedProcedure
+      .input(z.object({ batchId: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        const batch = await getUploadBatch(input.batchId);
+        if (!batch || batch.userId !== ctx.user.id) {
+          throw new Error("Batch not found or unauthorized");
+        }
+        
+        // Get all cleaned records for this batch
+        const records = await getBatchRecords(input.batchId);
+        const cleanedRecordIds = records
+          .filter(r => r.status === "cleaned")
+          .map(r => r.id);
+        
+        if (cleanedRecordIds.length === 0) {
+          return { success: true, count: 0 };
+        }
+        
+        // Approve all cleaned records
+        await updateDataRecordsBulk(cleanedRecordIds, {
+          status: "approved",
+          needsReview: false,
+          reviewedBy: ctx.user.id,
+          reviewedAt: new Date()
+        });
+        
+        // Create audit log
+        await createAuditLog({
+          userId: ctx.user.id,
+          batchId: input.batchId,
+          action: "approve",
+          entityType: "batch",
+          entityId: input.batchId,
+          newValue: { action: "accept_all_cleaned", count: cleanedRecordIds.length }
+        });
+        
+        return { success: true, count: cleanedRecordIds.length };
+      }),
   }),
 
   // ============ VALIDATION ISSUES ============

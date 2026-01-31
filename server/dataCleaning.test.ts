@@ -133,6 +133,69 @@ describe("Data Cleaning Engine", () => {
       // Phone is cleaned with country code prefix
       expect(result.record.cleanedPhone).toMatch(/^\+65/);
     });
+
+    it("formats Singapore phone number as +65 XXXX XXXX", () => {
+      const record = {
+        id: 15,
+        batchId: 1,
+        rowIndex: 14,
+        name: "Test User",
+        phone: "6591234567",
+        email: "test@example.com",
+        postalCode: "123456",
+        country: "Singapore",
+        status: "pending" as const,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const result = cleanRecord(record, "singapore");
+      
+      // Phone should be formatted as +65 XXXX XXXX
+      expect(result.record.cleanedPhone).toBe("+65 9123 4567");
+    });
+
+    it("formats Singapore phone number without country code", () => {
+      const record = {
+        id: 16,
+        batchId: 1,
+        rowIndex: 15,
+        name: "Test User",
+        phone: "91234567",
+        email: "test@example.com",
+        postalCode: "123456",
+        country: "Singapore",
+        status: "pending" as const,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const result = cleanRecord(record, "singapore");
+      
+      // Phone should be formatted as +65 XXXX XXXX
+      expect(result.record.cleanedPhone).toBe("+65 9123 4567");
+    });
+
+    it("formats Singapore phone number with +65 prefix", () => {
+      const record = {
+        id: 17,
+        batchId: 1,
+        rowIndex: 16,
+        name: "Test User",
+        phone: "+6598765432",
+        email: "test@example.com",
+        postalCode: "123456",
+        country: "Singapore",
+        status: "pending" as const,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const result = cleanRecord(record, "singapore");
+      
+      // Phone should be formatted as +65 XXXX XXXX
+      expect(result.record.cleanedPhone).toBe("+65 9876 5432");
+    });
   });
 
   describe("cleanRecord - Email Validation", () => {

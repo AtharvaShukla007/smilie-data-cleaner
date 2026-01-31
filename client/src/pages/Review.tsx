@@ -97,6 +97,18 @@ export default function Review() {
     }
   });
 
+  const acceptAllCleanedMutation = trpc.records.acceptAllCleaned.useMutation({
+    onSuccess: (data) => {
+      if (data.count > 0) {
+        toast.success(`Accepted all ${data.count} cleaned records`);
+      } else {
+        toast.info("No cleaned records to accept");
+      }
+      setSelectedRecords([]);
+      refetchRecords();
+    }
+  });
+
   const updateMutation = trpc.records.update.useMutation({
     onSuccess: () => {
       toast.success("Record updated");
@@ -244,28 +256,46 @@ export default function Review() {
                   </Select>
                 </div>
 
-                {selectedRecords.length > 0 && (
-                  <div className="flex gap-2">
+                <div className="flex gap-2">
+                  {(recordStats?.cleaned || 0) > 0 && (
                     <Button
-                      variant="outline"
+                      variant="default"
                       size="sm"
-                      onClick={() => bulkApproveMutation.mutate({ ids: selectedRecords })}
-                      disabled={bulkApproveMutation.isPending}
+                      onClick={() => acceptAllCleanedMutation.mutate({ batchId: selectedBatchId! })}
+                      disabled={acceptAllCleanedMutation.isPending}
+                      className="bg-green-600 hover:bg-green-700"
                     >
-                      <CheckCircle2 className="h-4 w-4 mr-1" />
-                      Approve ({selectedRecords.length})
+                      {acceptAllCleanedMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                      ) : (
+                        <CheckCircle2 className="h-4 w-4 mr-1" />
+                      )}
+                      Accept All Cleaned ({recordStats?.cleaned || 0})
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => bulkRejectMutation.mutate({ ids: selectedRecords })}
-                      disabled={bulkRejectMutation.isPending}
-                    >
-                      <XCircle className="h-4 w-4 mr-1" />
-                      Reject ({selectedRecords.length})
-                    </Button>
-                  </div>
-                )}
+                  )}
+                  {selectedRecords.length > 0 && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => bulkApproveMutation.mutate({ ids: selectedRecords })}
+                        disabled={bulkApproveMutation.isPending}
+                      >
+                        <CheckCircle2 className="h-4 w-4 mr-1" />
+                        Approve ({selectedRecords.length})
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => bulkRejectMutation.mutate({ ids: selectedRecords })}
+                        disabled={bulkRejectMutation.isPending}
+                      >
+                        <XCircle className="h-4 w-4 mr-1" />
+                        Reject ({selectedRecords.length})
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>

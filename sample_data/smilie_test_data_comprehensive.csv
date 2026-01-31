@@ -1,0 +1,81 @@
+name,phone,email,address,address_line_2,city,state,postal_code,country
+John Tan Wei Ming,91234567,john.tan@company.com,Blk 123 Ang Mo Kio Ave 3,#05-123,Singapore,,560123,Singapore
+Sarah Lim Mei Ling,+6598765432,sarah.lim@corporate.sg,Block 456 Bedok North Street 1,Unit 08-456,Singapore,,460456,Singapore
+Michael Wong,8123 4567,michael.wong@email.com,123 Orchard Road,#12-01 Ngee Ann City,Singapore,,238867,Singapore
+Emily Chen Hui Wen,,emily.chen@business.com,Blk 789 Tampines St 21,#03-789,Singapore,,520789,Singapore
+David Lee,91112222,invalid-email-format,45 Raffles Place,#30-00 Singapore Land Tower,Singapore,,048618,Singapore
+Rachel Ng Siew Mei,+65 9333 4444,rachel.ng@corp.com.sg,Block 234 Jurong West St 24,#11-234,Singapore,,640234,Singapore
+Kevin Tan,8555666,kevin.tan@mail.com,Blk 567 Woodlands Drive 14,,Singapore,,730567,Singapore
+Amanda Goh,+6597778888,amanda.goh@enterprise.sg,12 Marina Boulevard,#35-01 Marina Bay Financial Centre Tower 3,Singapore,,018982,Singapore
+Benjamin Chua Wei Liang,91239999,benjamin.chua@company.com,Blk 890 Yishun Ring Road,#06-890,Singapore,,760890,Singapore
+Christina Teo,+65-8111-2222,christina.teo@business.sg,Block 111 Bukit Batok West Ave 6,#04-111,Singapore,,650111,Singapore
+Daniel Lim Kah Seng,92223333,daniel.lim@corp.com,Blk 222 Clementi Ave 4,#09-222,Singapore,,120222,Singapore
+Felicia Tan Mei Yin,+6593334444,felicia.tan@email.sg,333 Serangoon Road,#02-01,Singapore,,218147,Singapore
+Gregory Ong,84445555,gregory.ong@company.com,Blk 444 Pasir Ris Drive 6,#07-444,Singapore,,510444,Singapore
+Hannah Lee Hui Min,+65 9555 6666,hannah.lee@business.com,Block 555 Hougang Ave 8,#10-555,Singapore,,530555,Singapore
+Ivan Koh Wei Jie,96667777,ivan.koh@corporate.sg,Blk 666 Sengkang East Way,#05-666,Singapore,,540666,Singapore
+Jessica Ng Mei Ling,+6587778888,jessica.ng@email.com,777 Bukit Timah Road,#03-01 The Coronation,Singapore,,269762,Singapore
+Kenneth Tan Kah Hoe,98889999,kenneth.tan@corp.com.sg,Blk 888 Punggol Field,#08-888,Singapore,,820888,Singapore
+Linda Goh Siew Ling,+65-9000-1111,linda.goh@business.sg,Block 999 Choa Chu Kang Ave 4,#12-999,Singapore,,680999,Singapore
+Marcus Lee Wei Ming,81112233,marcus.lee@company.com,Blk 101 Toa Payoh Lorong 1,#04-101,Singapore,,310101,Singapore
+Nancy Chua Hui Wen,+6592223344,nancy.chua@enterprise.sg,102 Robinson Road,#15-01 Robinson 77,Singapore,,068547,Singapore
+Ahmad bin Ibrahim,+60123456789,ahmad.ibrahim@company.my,No. 123 Jalan Bukit Bintang,,Kuala Lumpur,Wilayah Persekutuan,50200,Malaysia
+Siti Nurhaliza,60-17-234-5678,siti.haliza@business.my,45 Jalan Sultan Ismail,Level 10,Kuala Lumpur,WP,50250,Malaysia
+Tan Ah Kow,+60 12 345 6789,tan.ahkow@corp.my,Lot 789 Jalan Ampang,,Kuala Lumpur,Selangor,50450,Malaysia
+Muhammad Rizal,0123456789,rizal@email.my,Block A Menara Kuala Lumpur,Suite 20-01,Kuala Lumpur,,50088,Malaysia
+Nurul Aisyah,+6019-876-5432,nurul.aisyah@company.my,No 56 Jalan Tun Razak,,Kuala Lumpur,WP Kuala Lumpur,50400,Malaysia
+Budi Santoso,+6281234567890,budi.santoso@company.id,Jl. Sudirman No. 123,,Jakarta Selatan,DKI Jakarta,12190,Indonesia
+Dewi Lestari,081-234-567-890,dewi.lestari@business.id,Jalan Gatot Subroto Kav. 45,Lantai 15,Jakarta,Jakarta,12930,Indonesia
+Agus Wijaya,+62 812 3456 7890,agus.wijaya@corp.id,Jl. Thamrin No. 789,,Jakarta Pusat,DKI,10350,Indonesia
+Rina Susanti,08123456789,rina.susanti@email.id,Komplek Ruko Mangga Dua,Blok A No. 12,Jakarta Utara,,14430,Indonesia
+Hendra Gunawan,+62-813-9876-5432,hendra.gunawan@company.id,Jl. HR Rasuna Said Kav. C-22,,Jakarta Selatan,Jakarta,12940,Indonesia
+Somchai Prasert,+66812345678,somchai.prasert@company.th,123 Sukhumvit Road,Floor 25,Bangkok,Bangkok,10110,Thailand
+Nattaya Srisawat,66-81-234-5678,nattaya.srisawat@business.th,456 Silom Road,Unit 1501,Bangkok,,10500,Thailand
+Wichai Thongchai,+66 81 234 5678,wichai.thongchai@corp.th,789 Rama IV Road,,Bangkok,Krung Thep,10330,Thailand
+Pranee Chaiyasit,0812345678,pranee.chaiyasit@email.th,Soi Sukhumvit 21,Asoke Tower Floor 10,Bangkok,,10110,Thailand
+Kittisak Wongsawat,+66-89-876-5432,kittisak.wongsawat@company.th,123/45 Ratchadaphisek Road,,Bangkok,BKK,10400,Thailand
+Maria Santos,+639171234567,maria.santos@company.ph,123 Ayala Avenue,Floor 30 Tower One,Makati City,Metro Manila,1226,Philippines
+Juan dela Cruz,63-917-234-5678,juan.delacruz@business.ph,456 EDSA,Unit 2501 Robinsons Galleria,Quezon City,NCR,1100,Philippines
+Ana Reyes,+63 917 345 6789,ana.reyes@corp.ph,789 Bonifacio Global City,High Street South Block,Taguig,Metro Manila,1634,Philippines
+Pedro Garcia,09171234567,pedro.garcia@email.ph,SM Mall of Asia Complex,Building A Unit 101,Pasay City,,1300,Philippines
+Rosa Mendoza,+63-918-876-5432,rosa.mendoza@company.ph,123 Makati Avenue,,Makati,MM,1200,Philippines
+James Smith,+12025551234,james.smith@company.com,123 Main Street,Suite 500,New York,NY,10001,United States
+Jennifer Johnson,1-202-555-2345,jennifer.johnson@business.com,456 Broadway,Floor 25,New York,New York,10013,USA
+Robert Williams,+1 202 555 3456,robert.williams@corp.com,789 Fifth Avenue,Apt 30A,New York,NY,10022,United States
+Patricia Brown,2025554567,patricia.brown@email.com,321 Park Avenue,,New York,New York,10017,USA
+Michael Davis,+1-202-555-5678,michael.davis@company.com,555 Madison Avenue,Suite 1500,New York,NY,10022,United States
+Emma Thompson,+442071234567,emma.thompson@company.co.uk,123 Oxford Street,Floor 5,London,,W1D 2LG,United Kingdom
+Oliver Wilson,44-20-7123-4567,oliver.wilson@business.co.uk,456 Regent Street,Suite 300,London,Greater London,W1B 5AH,UK
+Charlotte Davies,+44 20 7234 5678,charlotte.davies@corp.co.uk,789 Bond Street,,London,,W1S 4PD,United Kingdom
+Harry Taylor,02071234567,harry.taylor@email.co.uk,321 Piccadilly,Unit 10,London,London,W1J 9HP,UK
+Sophie Martin,+44-20-7345-6789,sophie.martin@company.co.uk,555 Baker Street,Flat 221B,London,,NW1 6XE,United Kingdom
+Liam O'Brien,+61412345678,liam.obrien@company.com.au,123 George Street,Level 30,Sydney,NSW,2000,Australia
+Olivia Mitchell,61-4-1234-5678,olivia.mitchell@business.com.au,456 Pitt Street,Suite 1500,Sydney,New South Wales,2000,Australia
+Noah Anderson,+61 412 345 678,noah.anderson@corp.com.au,789 Martin Place,,Sydney,NSW,2000,Australia
+Ava Thompson,0412345678,ava.thompson@email.com.au,321 Macquarie Street,Floor 20,Sydney,New South Wales,2000,Australia
+William Harris,+61-4-1234-5678,william.harris@company.com.au,555 Elizabeth Street,Unit 10,Sydney,NSW,2000,Australia
+Tan Wei Ming,9123456,tanweiming@company.com,Blk 12 AMK Ave 3,#05-12,Singapore,,56012,Singapore
+Lim Mei Ling,+659876543,lim.meiling@corp.sg,Block 45 Bedok Nth St 1,Unit 8-45,Singapore,,46045,Singapore
+Wong Kah Seng,812345678,wong.kahseng@email.com,123 Orchard Rd,#12-01 Ngee Ann,Singapore,,23886,Singapore
+Chen Hui Wen,91234567,chen.huiwen@business.com,Blk 78 Tampines Street 21,#03-78,Singapore,,52078,Singapore
+Lee Wei Jie,+6591112222,lee.weijie@corp.com.sg,45 Raffles Pl,#30-00 SG Land Twr,Singapore,,04861,Singapore
+Ng Siew Mei,9333444,ng.siewmei@company.sg,Block 23 Jurong W St 24,#11-23,Singapore,,64023,Singapore
+Tan Kah Hoe,+658555666,tan.kahhoe@mail.com,Blk 56 Woodlands Dr 14,,Singapore,,73056,Singapore
+Goh Mei Yin,97778888,goh.meiyin@enterprise.sg,12 Marina Blvd,#35-01 MBFC Tower 3,Singapore,,01898,Singapore
+Chua Wei Liang,+6591239999,chua.weiliang@company.com,Blk 89 Yishun Ring Rd,#06-89,Singapore,,76089,Singapore
+Teo Hui Min,8111222,teo.huimin@business.sg,Block 11 Bukit Batok W Ave 6,#04-11,Singapore,,65011,Singapore
+Missing Name Field,,missing.name@email.com,123 Test Street,#01-01,Singapore,,123456,Singapore
+John Doe,91234567,,456 No Email Road,#02-02,Singapore,,234567,Singapore
+Jane Smith,,,789 Missing Contact Ave,#03-03,Singapore,,345678,Singapore
+Incomplete Record,9123,,Partial Address,,,,456789,Singapore
+No Address Person,98765432,noaddress@email.com,,,Singapore,,,Singapore
+Missing Postal,91112222,missing.postal@email.com,123 Complete Street,#05-05,Singapore,,,Singapore
+Test Duplicate 1,91234567,duplicate@email.com,123 Same Address,#01-01,Singapore,,123456,Singapore
+Test Duplicate 1,91234567,duplicate@email.com,123 Same Address,#01-01,Singapore,,123456,Singapore
+Test Duplicate 2,98765432,another.duplicate@email.com,456 Another Same,#02-02,Singapore,,234567,Singapore
+Test Duplicate 2,98765432,another.duplicate@email.com,456 Another Same,#02-02,Singapore,,234567,Singapore
+Suspicious Entry,00000000,fake@fake.fake,XXXXXXXXX,XXXXX,XXXXXX,,000000,Singapore
+Invalid Phone,abcdefgh,invalid.phone@email.com,123 Valid Street,#01-01,Singapore,,123456,Singapore
+Very Long Name That Exceeds Normal Character Limits And Might Cause Issues In The System,91234567,longname@email.com,123 Normal Street,#01-01,Singapore,,123456,Singapore
+Special Chars !@#$%,91234567,special.chars@email.com,123 Normal Street,#01-01,Singapore,,123456,Singapore
+Numbers Only 12345,91234567,numbers.name@email.com,123 Normal Street,#01-01,Singapore,,123456,Singapore

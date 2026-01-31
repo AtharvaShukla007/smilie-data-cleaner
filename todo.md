@@ -48,3 +48,25 @@
 - [x] Issues management endpoints (issues.list, issues.resolve)
 - [x] Audit logs endpoint (audit.list)
 - [x] API keys management endpoints (apiKeys.create, apiKeys.list, apiKeys.revoke)
+
+
+## Sample Test Data Generation
+
+- [x] Generate sample CSV with Singapore address formatting inconsistencies (Blk vs Block, St vs Street, etc.)
+- [x] Generate sample CSV with postal code issues (missing, typos, transposed digits)
+- [x] Generate sample CSV with contact data problems (missing phone, invalid email, incomplete fields)
+- [x] Generate sample CSV with problematic/suspicious entries (invalid addresses, duplicate entries)
+- [x] Generate sample CSV with regional addresses (Malaysia, Indonesia, Thailand, Philippines)
+- [x] Generate sample CSV with international addresses (US, UK, Australia, Europe)
+- [x] Create comprehensive test file combining all issue types
+
+## Bug Fixes
+
+- [x] Fix API error on /audit page returning HTML instead of JSON
+
+- [x] Create comprehensive Singapore-only test dataset with all issue types
+
+## New Feature Requests
+
+- [x] Add "Accept All Cleaned" button to Review & Clean page
+- [x] Update Singapore phone formatting to "+65 XXXX XXXX" format

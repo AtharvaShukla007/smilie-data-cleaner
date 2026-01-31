@@ -172,6 +172,32 @@ function cleanPhone(phone: string, region: string): string {
     }
   }
   
+  // Format phone number based on region
+  if (region === "singapore") {
+    // Singapore format: +65 XXXX XXXX
+    // Extract the 8-digit local number
+    const digits = cleaned.replace(/\D/g, "");
+    let localNumber = digits;
+    
+    // Remove country code if present
+    if (digits.startsWith("65") && digits.length >= 10) {
+      localNumber = digits.slice(2);
+    }
+    
+    // Take only the last 8 digits for Singapore
+    if (localNumber.length > 8) {
+      localNumber = localNumber.slice(-8);
+    }
+    
+    // Format as +65 XXXX XXXX if we have 8 digits
+    if (localNumber.length === 8) {
+      cleaned = `+65 ${localNumber.slice(0, 4)} ${localNumber.slice(4)}`;
+    } else {
+      // If not 8 digits, just add +65 prefix
+      cleaned = `+65 ${localNumber}`;
+    }
+  }
+  
   return cleaned;
 }
 

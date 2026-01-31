@@ -1,0 +1,42 @@
+name,phone,email,address,address_line_2,city,state,postal_code,country
+,91234567,no.name@email.com,Blk 123 Ang Mo Kio Ave 3,#05-123,Singapore,,560123,Singapore
+Missing Name,,missing.all@email.com,Block 456 Bedok North Street 1,Unit 08-456,Singapore,,460456,Singapore
+John Doe,,,Blk 789 Tampines St 21,#03-789,Singapore,,520789,Singapore
+Incomplete Record,9123,,Partial Address,,,,456789,Singapore
+No Address Person,98765432,noaddress@email.com,,,Singapore,,,Singapore
+Missing Everything,,,,,,,,,
+Only Name Present,,,,,,,,,
+Only Phone,91234567,,,,,,,,
+Only Email,,only.email@test.com,,,,,,,
+Test Duplicate 1,91234567,duplicate@email.com,123 Same Address,#01-01,Singapore,,123456,Singapore
+Test Duplicate 1,91234567,duplicate@email.com,123 Same Address,#01-01,Singapore,,123456,Singapore
+Test Duplicate 2,98765432,another.duplicate@email.com,456 Another Same,#02-02,Singapore,,234567,Singapore
+Test Duplicate 2,98765432,another.duplicate@email.com,456 Another Same,#02-02,Singapore,,234567,Singapore
+Test Duplicate 3,93456789,third.duplicate@email.com,789 Third Same,#03-03,Singapore,,345678,Singapore
+Test Duplicate 3,93456789,third.duplicate@email.com,789 Third Same,#03-03,Singapore,,345678,Singapore
+Test Duplicate 3,93456789,third.duplicate@email.com,789 Third Same,#03-03,Singapore,,345678,Singapore
+Suspicious Entry,00000000,fake@fake.fake,XXXXXXXXX,XXXXX,XXXXXX,,000000,Singapore
+All Zeros,00000000,zeros@zeros.com,000000000,00000,000000,,000000,000000
+Invalid Phone,abcdefgh,invalid.phone@email.com,123 Valid Street,#01-01,Singapore,,123456,Singapore
+Phone With Symbols,91!@#$%^,symbols.phone@email.com,456 Normal Street,#02-02,Singapore,,234567,Singapore
+Very Long Name That Exceeds Normal Character Limits And Might Cause Issues In The System When Processing Data,91234567,longname@email.com,123 Normal Street,#01-01,Singapore,,123456,Singapore
+Special Chars !@#$%,91234567,special.chars@email.com,123 Normal Street,#01-01,Singapore,,123456,Singapore
+Numbers Only 12345,91234567,numbers.name@email.com,123 Normal Street,#01-01,Singapore,,123456,Singapore
+Single Letter A,91234567,single.letter@email.com,123 Normal Street,#01-01,Singapore,,123456,Singapore
+HTML Injection <script>alert('test')</script>,91234567,html.injection@email.com,<script>alert('xss')</script>,#01-01,Singapore,,123456,Singapore
+SQL Injection'; DROP TABLE users;--,91234567,sql.injection@email.com,'; DROP TABLE addresses;--,#01-01,Singapore,,123456,Singapore
+Unicode Test 你好世界,91234567,unicode@email.com,中文地址测试,#01-01,Singapore,,123456,Singapore
+Emoji Test 😀🎉,91234567,emoji@email.com,123 Emoji Street 🏠,#01-01,Singapore,,123456,Singapore
+Whitespace Only,91234567,whitespace@email.com,   ,   ,   ,,   ,Singapore
+Tab Characters	Name,91234567,tabs@email.com,123	Tab	Street,#01-01,Singapore,,123456,Singapore
+Newline Test
+Name,91234567,newline@email.com,123 Newline
+Street,#01-01,Singapore,,123456,Singapore
+Very Long Address That Goes On And On And On And On And On And On And On And On And On And On And On And On And On And On And On And On And On And On And On And On And On And On And On,91234567,longaddress@email.com,This Is An Extremely Long Address Line That Exceeds Normal Limits And Should Be Flagged For Review Because It Is Suspicious,#01-01,Singapore,,123456,Singapore
+PO Box Only,91234567,pobox@email.com,PO Box 12345,,Singapore,,123456,Singapore
+Care Of Address,91234567,careof@email.com,C/O John Smith,123 Main Street,Singapore,,123456,Singapore
+Attention Address,91234567,attention@email.com,ATTN: Jane Doe,456 Business Ave,Singapore,,234567,Singapore
+Placeholder Address,91234567,placeholder@email.com,TBD,TBC,TBA,,123456,Singapore
+Test Address,91234567,test@email.com,Test Street,Test Unit,Test City,,123456,Singapore
+Sample Address,91234567,sample@email.com,Sample Street,Sample Unit,Sample City,,123456,Singapore
+Dummy Data,91234567,dummy@email.com,Dummy Street,Dummy Unit,Dummy City,,123456,Singapore

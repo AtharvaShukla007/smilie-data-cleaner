@@ -1,0 +1,31 @@
+name,phone,email,address,address_line_2,city,state,postal_code,country
+Tan Wei Ming,9123456,tan.weiming@company.com,Blk 123 Ang Mo Kio Ave 3,#05-123,Singapore,,56012,Singapore
+Lim Mei Ling,+659876543,lim.meiling@corp.sg,Block 456 Bedok North Street 1,Unit 08-456,Singapore,,46045,Singapore
+Wong Kah Seng,812345678,wong.kahseng@email.com,Blk 789 Tampines St 21,#03-789,Singapore,,23886,Singapore
+Chen Hui Wen,91234567,chen.huiwen@business.com,Blk 234 Jurong West Street 24,#11-234,Singapore,,52078,Singapore
+Lee Wei Jie,+6591112222,lee.weijie@corp.com.sg,45 Raffles Place,#30-00 SG Land Tower,Singapore,,04861,Singapore
+Ng Siew Mei,9333444,ng.siewmei@company.sg,Block 567 Woodlands Drive 14,,Singapore,,64023,Singapore
+Tan Kah Hoe,+658555666,tan.kahhoe@mail.com,Blk 890 Yishun Ring Road,#06-890,Singapore,,73056,Singapore
+Goh Mei Yin,97778888,goh.meiyin@enterprise.sg,12 Marina Boulevard,#35-01 MBFC Tower 3,Singapore,,01898,Singapore
+Chua Wei Liang,+6591239999,chua.weiliang@company.com,Blk 111 Bukit Batok West Ave 6,#04-111,Singapore,,76089,Singapore
+Teo Hui Min,8111222,teo.huimin@business.sg,Block 222 Clementi Ave 4,#09-222,Singapore,,65011,Singapore
+Missing Phone Person,,missing.phone@email.com,Blk 333 Pasir Ris Drive 6,#07-333,Singapore,,510333,Singapore
+No Email Person,91234567,,Block 444 Hougang Ave 8,#10-444,Singapore,,530444,Singapore
+Both Missing,,invalid-email,Blk 555 Sengkang East Way,#05-555,Singapore,,540555,Singapore
+Invalid Email Format,92345678,not.an.email,Block 666 Punggol Field,#08-666,Singapore,,820666,Singapore
+Malformed Email,93456789,test@,Blk 777 Choa Chu Kang Ave 4,#12-777,Singapore,,680777,Singapore
+Another Bad Email,94567890,@domain.com,Block 888 Toa Payoh Lorong 1,#04-888,Singapore,,310888,Singapore
+Space In Email,95678901,test email@domain.com,Blk 999 Bishan St 22,#07-999,Singapore,,570999,Singapore
+Phone With Letters,abcd1234,letters.phone@email.com,Block 100 Queenstown,#03-100,Singapore,,140100,Singapore
+Too Short Phone,9123,short.phone@email.com,Blk 200 Geylang East Ave 1,#05-200,Singapore,,380200,Singapore
+Too Long Phone,912345678901234,long.phone@email.com,Block 300 Kallang Bahru,#08-300,Singapore,,330300,Singapore
+Missing Postal Code,91234567,missing.postal@email.com,Blk 400 MacPherson Rd,#10-400,Singapore,,,Singapore
+Invalid Postal,92345678,invalid.postal@email.com,Block 500 Potong Pasir Ave 1,#02-500,Singapore,,ABCDEF,Singapore
+Short Postal,93456789,short.postal@email.com,Blk 600 Serangoon North Ave 1,#04-600,Singapore,,1234,Singapore
+Long Postal,94567890,long.postal@email.com,Block 700 Whampoa Drive,#06-700,Singapore,,12345678,Singapore
+Transposed Postal,95678901,transposed.postal@email.com,Blk 800 Boon Lay Ave,#09-800,Singapore,,123654,Singapore
+Zero Postal,96789012,zero.postal@email.com,Block 900 Pioneer Rd,#11-900,Singapore,,000000,Singapore
+All Nines Postal,97890123,nines.postal@email.com,Blk 101 Toa Payoh Lorong 1,#04-101,Singapore,,999999,Singapore
+Partial Phone,9123,partial.phone@email.com,Block 102 Robinson Road,#15-01,Singapore,,068547,Singapore
+Formatted Phone,+65 9123 4567,formatted.phone@email.com,Blk 103 Serangoon Road,#02-01,Singapore,,218147,Singapore
+Dashed Phone,91-23-45-67,dashed.phone@email.com,Block 104 Bukit Timah Road,#03-01,Singapore,,269762,Singapore
