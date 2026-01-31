@@ -80,3 +80,6 @@
 - [x] Fix stats not updating when rejecting records on Review & Clean page
 
 - [x] Display address fields (raw and cleaned) in Review & Clean table
+
+- [x] Merge address into single column (combine address line 1 and 2)
+- [x] Ensure raw address is completely struck through when corrected

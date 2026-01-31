@@ -365,21 +365,26 @@ export default function Review() {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="max-w-[250px]">
-                              <p className="truncate" title={record.cleanedAddressLine1 || record.addressLine1 || "-"}>
-                                {record.cleanedAddressLine1 || record.addressLine1 || "-"}
-                              </p>
-                              {record.addressLine1 !== record.cleanedAddressLine1 && record.addressLine1 && (
-                                <p className="text-xs text-muted-foreground line-through truncate" title={record.addressLine1}>
-                                  {record.addressLine1}
-                                </p>
-                              )}
-                              {(record.cleanedAddressLine2 || record.addressLine2) && (
-                                <p className="text-xs text-muted-foreground truncate" title={record.cleanedAddressLine2 || record.addressLine2 || ""}>
-                                  {record.cleanedAddressLine2 || record.addressLine2}
-                                </p>
-                              )}
-                            </div>
+                            {(() => {
+                              // Combine address fields into single strings
+                              const rawAddress = [record.addressLine1, record.addressLine2].filter(Boolean).join(', ');
+                              const cleanedAddress = [record.cleanedAddressLine1, record.cleanedAddressLine2].filter(Boolean).join(', ');
+                              const displayAddress = cleanedAddress || rawAddress || "-";
+                              const hasChanges = rawAddress && cleanedAddress && rawAddress !== cleanedAddress;
+                              
+                              return (
+                                <div className="max-w-[280px]">
+                                  <p className="truncate" title={displayAddress}>
+                                    {displayAddress}
+                                  </p>
+                                  {hasChanges && (
+                                    <p className="text-xs text-muted-foreground line-through truncate" title={rawAddress}>
+                                      {rawAddress}
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            })()}
                           </TableCell>
                           <TableCell>
                             <div>
