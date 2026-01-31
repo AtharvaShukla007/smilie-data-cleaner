@@ -97,3 +97,7 @@
 - [x] Review and improve data quality scoring system
 - [x] Increase page size to 30 records
 - [x] Add pagination info (e.g., "Page X of Y") to the left of Previous button
+
+- [x] Fix phone validation - numbers like +65 1234 5678 should be flagged (starts with 1, not 6/8/9)
+- [x] Preserve N/A values - don't clean or modify N/A entries
+- [x] Create v4 dataset with corrected test cases and real addresses for N/A records

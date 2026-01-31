@@ -131,8 +131,15 @@ function cleanString(value: string | undefined | null): string {
   return value.toString().trim().replace(/\s+/g, " ");
 }
 
+function isPlaceholderValue(value: string): boolean {
+  const placeholders = ["n/a", "na", "nil", "none", "-", "--", "tbd", "tbc"];
+  return placeholders.includes(value.trim().toLowerCase());
+}
+
 function cleanName(name: string): string {
   if (!name) return "";
+  // Preserve N/A and similar placeholder values as-is
+  if (isPlaceholderValue(name)) return name.trim();
   // Remove extra spaces, capitalize properly
   return name
     .trim()
@@ -144,6 +151,8 @@ function cleanName(name: string): string {
 
 function cleanPhone(phone: string, region: string): string {
   if (!phone) return "";
+  // Preserve N/A and similar placeholder values as-is
+  if (isPlaceholderValue(phone)) return phone.trim();
   // Remove all non-digit characters
   let digits = phone.replace(/\D/g, "");
   
@@ -212,6 +221,8 @@ function cleanPhone(phone: string, region: string): string {
 
 function cleanEmail(email: string): string {
   if (!email) return "";
+  // Preserve N/A and similar placeholder values as-is
+  if (isPlaceholderValue(email)) return email.trim();
   return email.trim().toLowerCase();
 }
 
@@ -238,6 +249,8 @@ function cleanPostalCode(postalCode: string, region: string): string {
 
 function cleanAddress(address: string, region: string = "singapore"): string {
   if (!address) return "";
+  // Preserve N/A and similar placeholder values as-is
+  if (isPlaceholderValue(address)) return address.trim();
   
   let cleaned = address
     .trim()
@@ -376,34 +389,37 @@ function validatePhone(phone: string, region: string): { valid: boolean; message
   
   // Special validation for Singapore numbers
   if (region === "singapore") {
-    // Remove all non-digits
+    // Remove all non-digits from the cleaned phone
     const digits = phone.replace(/\D/g, "");
     
-    // Extract the local number (8 digits)
+    // Extract the local number (8 digits after country code 65)
     let localNumber = digits;
     if (digits.startsWith("65") && digits.length >= 10) {
       localNumber = digits.slice(2);
+    } else if (digits.length === 8) {
+      localNumber = digits;
     }
     
-    // Singapore mobile numbers must start with 8 or 9
-    // Landlines start with 6, but most logistics data is mobile
-    if (localNumber.length >= 1) {
-      const firstDigit = localNumber[0];
-      if (firstDigit !== "8" && firstDigit !== "9" && firstDigit !== "6") {
-        return { 
-          valid: false, 
-          message: `Invalid Singapore number: must start with 8, 9, or 6 after +65 prefix (got ${firstDigit})` 
-        };
-      }
-    }
-    
-    // Check length - should be 8 digits for local number
+    // Check length first - should be 8 digits for local number
     if (localNumber.length !== 8) {
       return { 
         valid: false, 
         message: `Invalid Singapore number: local number should be 8 digits (got ${localNumber.length})` 
       };
     }
+    
+    // Singapore mobile numbers must start with 8 or 9
+    // Landlines start with 6
+    // Numbers starting with 1, 2, 3, 4, 5, 7 are INVALID
+    const firstDigit = localNumber[0];
+    if (firstDigit !== "8" && firstDigit !== "9" && firstDigit !== "6") {
+      return { 
+        valid: false, 
+        message: `Invalid Singapore number: must start with 6, 8, or 9 after +65 prefix (got ${firstDigit})` 
+      };
+    }
+    
+    return { valid: true };
   }
   
   const config = REGION_CONFIGS[region] || REGION_CONFIGS.international;

@@ -1,0 +1,87 @@
+name,phone,email,address,postal_code
+Tan Wei Ming,+65 9123 4567,weiming.tan@email.com,"Block 123 Ang Mo Kio Avenue 3, #08-456",560123
+Lee Mei Ling,+65 9234 5678,meiling.lee@gmail.com,"Block 456 Bedok North Street 1, #12-789",460456
+Lim Ah Kow,91234567,ahkow.lim@yahoo.com,"blk 789 tpy lor 4, #03-123",310789
+Wong Siew Mei,+6592345678,siewmei@hotmail.com,"BLK 321 AMK AVE 10 #05-678",560321
+Chen Wei Lin,93456789,weilin.chen@email.com,"block 654 CCK st 52 #10-234",680654
+Ng Boon Huat,+65 94567890,boonhuat.ng@gmail.com,"Blk 987 JW St 81, #07-890",640987
+Koh Mei Hua,+65 8123 4567,meihua.koh@email.com,"123 Orchard Road #15-01",238867
+Teo Ah Seng,81234567,ahseng.teo@yahoo.com,"45 Raffles Place #20-05",048618
+Goh Siew Lian,+6582345678,siewlian@hotmail.com,"Block 111 WDL Ave 1 #02-333",730111
+Ong Wei Kiat,83456789,weikiat.ong@email.com,"blk 222 YCK ave 2 #04-555",560222
+Tan Mei Fong,6592223333,meifong.tan@gmail.com,"Block 333 SGN North Ave 3, #06-777",550333
+Yeo Ah Huat,6512345678,ahhuat.yeo@yahoo.com,"Block 444 BDK North St 4, #08-999",460444
+Soh Bee Kuan,+65 9444 5555,beekuan@hotmail.com,"Block 555 TPN St 21, #10-111",520555
+Phua Cheng Hock,95556666,chenghock.phua@email.com,"blk 666 PGR dr 6 #12-333",510666
+Ang Siew Hua,6596667777,siewhua.ang@gmail.com,"Block 777 SBW Crescent, #14-555",750777
+TAN WEI MING,+65 9777 8888,WEIMING@EMAIL.COM,"BLOCK 888 JURONG WEST ST 81, #16-777",640888
+lee mei ling,+65 9888 9999,meiling@email.com,"block 999 bukit batok west ave 6, #18-999",650999
+Lim Ah Kow,+65 9111 2222,ahkow@email.com,"Block 100 Clementi Ave 1, #01-100",120100
+Wong Ah Huat,6523456789,ahhuat.wong@email.com,"Block 200 Invalid Phone Test, #02-200",140200
+Ng Boon Keng,6534567890,boonkeng.ng@email.com,"Block 300 Invalid Phone Test 2, #03-300",440300
+Goh Siew Cheng,6545678901,siewcheng.goh@email.com,"Block 400 Invalid Phone Test 3, #04-400",380400
+Test User,+65 9222 3333,test@test.com,"Block 500 Test Address, #05-500",500500
+Sample Name,+65 9333 4444,sample@sample.com,"Block 600 Sample Address, #06-600",600600
+XXXXX,+65 9444 5555,xxxxx@email.com,"Block 700 Placeholder Name, #07-700",700700
+TBD,+65 9555 6666,tbd@email.com,"Block 800 TBD Name, #08-800",800800
+N/A,+65 9666 7777,na@email.com,"Block 900 NA Name, #09-900",900900
+Tan Wei Ming,+65 9123 4567,weiming.tan@email.com,"Block 123 Ang Mo Kio Avenue 3, #08-456",560123
+Lee Mei Ling,+65 9234 5678,meiling.lee@gmail.com,"Block 456 Bedok North Street 1, #12-789",460456
+Lim Ah Kow,91234567,ahkow.lim@yahoo.com,"blk 789 tpy lor 4, #03-123",310789
+Tan Wei Ming,+65 9777 8888,weiming2@email.com,"Block 123 Ang Mo Kio Avenue 3, #08-456",560123
+Tan Wei Ming,+65 9777 8889,weiming3@email.com,"Block 123 Ang Mo Kio Avenue 3, #08-457",560123
+Chen Wei Lin,,weilin@email.com,"Block 100 Missing Phone, #01-100",100100
+Wong Mei Hua,+65 9111 2222,,"Block 200 Missing Email, #02-200",200200
+Ng Boon Seng,+65 9222 3333,boonseng@email.com,,300300
+,+65 9333 4444,missing@email.com,"Block 400 Missing Name, #04-400",400400
+Koh Ah Lian,+65 9444 5555,ahlian@email.com,"Block 500 Missing Postal",
+Teo Wei Kiat,+65 9555 6666,weikiat@email.com,N/A,500500
+Goh Mei Ling,N/A,meiling2@email.com,"Block 600 NA Phone, #06-600",600600
+Ong Siew Mei,+65 9777 8888,N/A,"Block 700 NA Email, #07-700",700700
+Tan Boon Huat,+65 9888 9999,boonhuat@email.com,"Block 800 Complete, #08-800",N/A
+Lim Wei Ming,56012,weiming.lim@email.com,"Block 100 Truncated Postal, #01-100",56012
+Wong Ah Kow,+65 9111 2222,ahkow.wong@email.com,"Block 200 Extra Digit Postal, #02-200",5602001
+Chen Mei Fong,+65 9222 3333,meifong.chen@email.com,"Block 300 Short Postal, #03-300",5603
+Yeo Boon Seng,+65 9333 4444,boonseng.yeo@email.com,"Block 400 Alpha Postal, #04-400",56ABC0
+Soh Wei Kiat,+65 9444 5555,weikiat.soh@email.com,"Block 500 Transposed Postal, #05-500",506050
+Phua Mei Hua,912345678,meihua.phua@email.com,"Block 100 9-digit Phone, #01-100",100100
+Ang Ah Seng,9123456,ahseng.ang@email.com,"Block 200 7-digit Phone, #02-200",200200
+Tan Siew Lian,+65912345678,siewlian.tan@email.com,"Block 300 No Space Phone, #03-300",300300
+Lee Wei Kiat,+65-9123-4567,weikiat.lee@email.com,"Block 400 Dash Phone, #04-400",400400
+Lim Boon Huat,659123 4567,boonhuat.lim@email.com,"Block 500 No Plus Phone, #05-500",500500
+Wong Mei Lingemail.com,+65 9111 2222,meilingwongemail.com,"Block 100 Missing @ Email, #01-100",100100
+Chen Ah Kowgmail.com,+65 9222 3333,ahkow@@gmail.com,"Block 200 Double @ Email, #02-200",200200
+Ng Siew Mei,+65 9333 4444,siewmei@gmail,"Block 300 Incomplete Domain, #03-300",300300
+Goh Wei Ming,+65 9444 5555,weiming@.com,"Block 400 Missing Domain Name, #04-400",400400
+Ong Boon Seng,+65 9555 6666,@email.com,"Block 500 Missing Username, #05-500",500500
+Tan Ah Lian,+65 9111 2222,ahlian@email.com,"blk 100 amk ave 1, 560100",560100
+Lee Wei Kiat,+65 9222 3333,weikiat@email.com,"BLK 200 TPY LOR 2 #02-200",310200
+Lim Mei Fong,+65 9333 4444,meifong@email.com,"block 300 cck st 3 #03-300",680300
+Wong Boon Huat,+65 9444 5555,boonhuat@email.com,"Blk 400 JW St 4 #04-400",640400
+Chen Siew Mei,+65 9555 6666,siewmei@email.com,"blk 500 wdl ave 5 #05-500",730500
+Ng Ah Kow,+65 9666 7777,ahkow@email.com,"BLK 600 YCK AVE 6 #06-600",560600
+Goh Wei Ling,+65 9777 8888,weiling@email.com,"block 700 sgn nth ave 7 #07-700",550700
+Ong Mei Hua,+65 9888 9999,meihua@email.com,"Blk 800 BDK Nth St 8 #08-800",460800
+Koh Boon Seng,+65 9111 1111,boonseng@email.com,"blk 900 tpn st 9 #09-900",520900
+Teo Ah Lian,+65 9222 2222,ahlian@email.com,"BLK 1000 PGR DR 10 #10-100",510100
+Phua Wei Kiat,+65 9333 3333,weikiat@email.com,"block 1100 sbw cres #11-110",750110
+Ang Mei Fong,+65 9444 4444,meifong@email.com,"Blk 1200 JE St 12 #12-120",600120
+Tan Boon Keng,+65 9555 5555,boonkeng@email.com,"blk 1300 BBT west ave 6 #13-130",650130
+Lee Siew Cheng,+65 9666 6666,siewcheng@email.com,"BLK 1400 BPJ RING RD #14-140",670140
+Lim Ah Huat,+65 9777 7777,ahhuat@email.com,"block 1500 clementi ave 1 #15-150",120150
+Wong Wei Ming,+65 9888 8888,weiming@email.com,"Blk 1600 Queenstown #16-160",140160
+Chen Mei Ling,+65 9999 9999,meiling@email.com,"blk 1700 marine parade #17-170",440170
+Yeo Boon Huat,+65 9123 1234,boonhuat@email.com,"BLK 1800 GEYLANG EAST #18-180",380180
+Soh Siew Mei,+65 9234 2345,siewmei@email.com,"block 1900 kallang #19-190",330190
+Phua Ah Kow,+65 9345 3456,ahkow@email.com,"Blk 2000 Toa Payoh Central #20-200",310200
+Ang Wei Ling,+65 9456 4567,weiling@email.com,"blk 2100 bishan st 21 #21-210",570210
+Tan Mei Hua,+65 9567 5678,meihua@email.com,"BLK 2200 ANG MO KIO AVE 1 #22-220",560220
+Lee Boon Seng,+65 9678 6789,boonseng@email.com,"block 2300 serangoon ave 2 #23-230",550230
+Lim Ah Lian,+65 9789 7890,ahlian@email.com,"Blk 2400 Hougang Ave 3 #24-240",530240
+Wong Wei Kiat,+65 9890 8901,weikiat@email.com,"blk 2500 punggol dr #25-250",820250
+Chen Mei Fong,+65 9901 9012,meifong@email.com,"BLK 2600 SENGKANG EAST WAY #26-260",540260
+Ng Boon Huat,+65 9012 0123,boonhuat@email.com,"block 2700 bukit panjang ring rd #27-270",670270
+Goh Siew Cheng,+65 9234 5670,siewcheng@email.com,"Blk 2800 Choa Chu Kang Ave 1 #28-280",680280
+Ong Ah Kow,+65 9345 6701,ahkow@email.com,"blk 2900 jurong west st 91 #29-290",640290
+Koh Wei Ming,+65 9456 7012,weiming@email.com,"BLK 3000 BOON LAY DR #30-300",640300
+Teo Mei Ling,+65 9567 8123,meiling@email.com,"block 3100 pioneer rd #31-310",628310
